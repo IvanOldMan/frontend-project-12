@@ -1,0 +1,22 @@
+{
+  "author": "Ivan Starikov",
+  "bugs": {
+    "url": "https://github.com/IvanOldMan/frontend-project-12/issues"
+  },
+  "dependencies": {
+    "@hexlet/chat-server": "^1.1.9"
+  },
+  "description": "[![Actions Status](https://github.com/IvanOldMan/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/IvanOldMan/frontend-project-12/actions)",
+  "homepage": "https://github.com/IvanOldMan/frontend-project-12#readme",
+  "license": "ISC",
+  "main": "src/index.js",
+  "name": "@hexlet/code",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IvanOldMan/frontend-project-12.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.0"
+}
