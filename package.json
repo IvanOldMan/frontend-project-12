@@ -16,7 +16,10 @@
     "url": "git+https://github.com/IvanOldMan/frontend-project-12.git"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run build --prefix frontend",
+    "start": "start-server -s ./frontend/build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "cd frontend && npm ci"
   },
   "version": "1.0.0"
 }
