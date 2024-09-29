@@ -1,8 +1,14 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import { Form, Formik} from "formik";
 import * as Yup from 'yup';
 import MyFormField from './MyFormField';
 import loginImage from '../images/login.jpg'
+import AuthService from "../services/AuthService.js";
+import { actions as authenticatedActions } from '../store/slices/authenticatedSlice.js';
+import { actions as channelsActions } from '../store/slices/channelsSlice.js';
+import {useDispatch} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 const SignupSchema = Yup.object().shape({
   username: Yup.string()
@@ -16,13 +22,37 @@ const SignupSchema = Yup.object().shape({
 });
 
 const RegistrationForm = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const getChannels = () => {
+
+  }
+
   return (
   <Formik
   initialValues={{ username: '', password: '' }}
   validationSchema={SignupSchema}
-  onSubmit={({ setSubmitting }) => {
-    console.log("Form is validated! Submitting the form...");
-    setSubmitting(false);
+  onSubmit={async (values, { setSubmitting }) => {
+    try {
+      const { token, username } = await AuthService.login(values);
+      console.log(token)
+      localStorage.setItem('token', token);
+      dispatch(authenticatedActions.setUsername(username));
+      dispatch(authenticatedActions.setAuthenticated(true));
+      axios.get('/api/v1/channels', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((response) => {
+        console.log(response.data); // =>[{ id: '1', name: 'general', removable: false }, ...]
+      });
+      //const messages = await AuthService.getMessages();
+      //dispatch(channelsActions.addChannels(channels));
+      navigate('/');
+    } catch (e) {
+      console.log(e)
+    }
   }}
   >
     {({ errors, touched }) => (
