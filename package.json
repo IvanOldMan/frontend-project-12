@@ -3,9 +3,8 @@
   "bugs": {
     "url": "https://github.com/IvanOldMan/frontend-project-12/issues"
   },
-
   "dependencies": {
-    "@hexlet/chat-server": "^1.1.9"
+    "@hexlet/chat-server": "^2.0.4"
   },
   "description": "[![Actions Status](https://github.com/IvanOldMan/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/IvanOldMan/frontend-project-12/actions)",
   "homepage": "https://github.com/IvanOldMan/frontend-project-12#readme",

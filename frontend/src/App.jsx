@@ -5,6 +5,7 @@ import RootPage from "./pages/RootPage";
 import ErrorPage from "./pages/ErrorPage";
 import React, {useEffect} from "react";
 import {useSelector} from 'react-redux';
+import NavBar from "./components/NavBar";
 
 function App() {
   const isAuth = useSelector((state) => state.authentication.isAuthenticated);
@@ -16,13 +17,17 @@ function App() {
 
 
   return (
+  <div className="d-flex flex-column h-100">
     <BrowserRouter>
+      <NavBar />
       <Routes>
         <Route path="/" element={startPage} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </BrowserRouter>
+  </div>
+
   );
 }
 

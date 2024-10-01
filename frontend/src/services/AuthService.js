@@ -1,4 +1,6 @@
 import axios from "axios";
+import {actions as authenticatedActions} from "../store/slices/authenticatedSlice";
+import {useDispatch} from "react-redux";
 
 const API_URL = '/api/v1';
 
@@ -8,13 +10,15 @@ const api = axios.create({
 
 const currentToken = localStorage.getItem('token');
 
+
 export default class AuthService {
+
   static async login({ username, password }) {
     try {
       const response = await api.post('/login', { username, password })
       return response.data;
     } catch (e) {
-      console.log(e);
+      throw new Error(e)
     }
   }
 
