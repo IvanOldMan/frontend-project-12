@@ -1,30 +1,38 @@
-import {
-  createSlice,
-  createEntityAdapter,
-} from '@reduxjs/toolkit';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const messagesAdapter = createEntityAdapter();
+export const messageApi = createApi({
+  reducerPath: 'messageApi',
+  baseQuery: fetchBaseQuery({
+    baseUrl: '/api/v1/messages',
+  }),
+  endpoints: (builder) => ({
+    getMessages: builder.query({
+      query: () => ({
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      }),
+    }),
+    /*
+    getUserById: builder.query({
+      query: (id) => id,
+    }),
+    addUser: builder.mutation({
+      query: (user) => ({
+        method: 'POST',
+        body: user,
+      }),
+    }),
+    removeUser: builder.mutation({
+      query: (id) => ({
+        url: id,
+        method: 'DELETE',
+      }),
 
-// По умолчанию: { ids: [], entities: {} }
-const initialState = messagesAdapter.getInitialState();
-
-const messagesSlice = createSlice({
-  name: 'messages',
-  initialState,
-  reducers: {
-    //addUser: usersAdapter.addOne,
-    addMessages: messagesAdapter.addMany,
-    // Если нужна дополнительная обработка, то создаем свою функцию
-    //removeUser: (state, { payload }) => {
-    // ...
-    // Внутри можно вызвать метод адаптера
-    //usersAdapter.removeOne(state, payload);
-    //},
-    //updateUser: usersAdapter.updateOne,
-  },
+     */
+  }),
 });
 
-//export const selectors = channelsAdapter.getSelectors((state) => state.channelsReducer);
-export const { actions } = messagesSlice;
-export default messagesSlice.reducer;
-export const selectors = messagesAdapter.getSelectors((state) => state.messages);
+export const {
+  useGetMessagesQuery,
+} = messageApi;

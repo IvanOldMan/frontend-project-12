@@ -7,7 +7,7 @@ import logo from "../images/Hexlet-logo.png";
 const NavBar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isAuth = useSelector((state) => state.authentication.isAuthenticated);
+  const isHaveToken = !!localStorage.getItem('token');
 
   const outHandler = () => {
     localStorage.removeItem("token");
@@ -21,7 +21,7 @@ const NavBar = () => {
           <a className="navbar-brand" href="/">
             Hexlet Chat
           </a>
-          {isAuth && <button className="btn btn-primary" type="button" onClick={outHandler}>Выйти</button>}
+          {isHaveToken && <button className="btn btn-primary" type="button" onClick={outHandler}>Выйти</button>}
     </div>
   </nav>
   );

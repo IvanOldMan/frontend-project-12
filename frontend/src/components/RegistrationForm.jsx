@@ -31,10 +31,7 @@ const RegistrationForm = () => {
       initialValues={{ username: '', password: '' }}
       validationSchema={SignupSchema}
       onSubmit={(values) => {
-        dispatch(authenticationRequest(values));
-        if (!!localStorage.getItem('token')) {
-          navigate('/');
-        }
+          dispatch(authenticationRequest(values));
         /*
         try {
           const { token, username } = await AuthService.login(values);

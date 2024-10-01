@@ -1,10 +1,10 @@
-import { useSelector } from 'react-redux';
-import { selectors } from '../store/slices/channelsSlice.js';
-import Message from "./Message";
 import React from "react";
+import {useGetMessagesQuery} from "../store/slices/messagesSlice";
+import MessageItem from "./MessageItem";
 
-const MessagesBar = () => {
-  const messages = useSelector(selectors.selectAll);
+const MessagesContainer = () => {
+  const {data: messages, error, isLoading} = useGetMessagesQuery('');
+
   return (
   <div className="col p-0 h-100">
     <div className="d-flex flex-column h-100">
@@ -30,4 +30,4 @@ const MessagesBar = () => {
   );
 };
 
-export default MessagesBar;
+export default MessagesContainer;

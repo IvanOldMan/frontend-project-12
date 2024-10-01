@@ -1,30 +1,38 @@
-import {
-  createSlice,
-  createEntityAdapter,
-} from '@reduxjs/toolkit';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const channelsAdapter = createEntityAdapter();
+export const channelApi = createApi({
+  reducerPath: 'channelApi',
+  baseQuery: fetchBaseQuery({
+    baseUrl: '/api/v1/channels',
+  }),
+  endpoints: (builder) => ({
+    getChannels: builder.query({
+      query: () => ({
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      }),
+    }),
+    /*
+    getUserById: builder.query({
+      query: (id) => id,
+    }),
+    addUser: builder.mutation({
+      query: (user) => ({
+        method: 'POST',
+        body: user,
+      }),
+    }),
+    removeUser: builder.mutation({
+      query: (id) => ({
+        url: id,
+        method: 'DELETE',
+      }),
 
-// По умолчанию: { ids: [], entities: {} }
-const initialState = channelsAdapter.getInitialState();
-
-const channelsSlice = createSlice({
-  name: 'channels',
-  initialState,
-  reducers: {
-    //addUser: usersAdapter.addOne,
-    addChannels: channelsAdapter.addMany,
-    // Если нужна дополнительная обработка, то создаем свою функцию
-    //removeUser: (state, { payload }) => {
-      // ...
-      // Внутри можно вызвать метод адаптера
-      //usersAdapter.removeOne(state, payload);
-    //},
-    //updateUser: usersAdapter.updateOne,
-  },
+     */
+    }),
 });
 
-//export const selectors = channelsAdapter.getSelectors((state) => state.channelsReducer);
-export const { actions } = channelsSlice;
-export default channelsSlice.reducer;
-export const selectors = channelsAdapter.getSelectors((state) => state.channels);
+export const {
+  useGetChannelsQuery,
+} = channelApi;
