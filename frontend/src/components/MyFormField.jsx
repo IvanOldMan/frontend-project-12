@@ -14,7 +14,7 @@ const MyFormField = ({name, text, autoComplete, initialClass}) => {
     <div className={`form-floating ${initialClass}`}>
       <Field
         id={name}
-        type={name}
+        type={autoComplete}
         name={name}
         autoComplete={autoComplete}
         className={classList}

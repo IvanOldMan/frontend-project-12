@@ -3,14 +3,14 @@ import axios from "axios";
 
 export const authenticationRequest = createAsyncThunk(
 'authenticationRequest', // Id отображается в dev tools и должен быть уникальный у каждого thunk
-async ({ username, password }) => {
-  const response = await axios.post('/api/v1/login', { username, password });
+async ({ username, password, url }) => {
+  const response = await axios.post(`/api/v1${url}`, { username, password });
+  console.log('RD:', response.data);
   return response.data;
 }
 );
 
 const initialState = {
-  username: '',
   isAuthenticated: false,
   error: null,
   loadingStatus: '',
@@ -20,9 +20,6 @@ const authenticatedSlice = createSlice({
   name: 'authenticated',
   initialState,
   reducers: {
-    setUsername(state, {payload}) {
-      state.username = payload;
-    },
     setAuthenticated(state, {payload}) {
       state.isAuthenticated = payload;
     },
@@ -35,8 +32,8 @@ const authenticatedSlice = createSlice({
       })
       .addCase(authenticationRequest.fulfilled, (state, {payload}) => {
         const { token, username } = payload;
-        localStorage.setItem('token', token);
-        state.username = username;
+        localStorage.setItem('AUTH_TOKEN', token);
+        localStorage.setItem('USER_NAME', username);
         state.isAuthenticated = true;
         state.loadingStatus = 'successful';
         state.error = null;

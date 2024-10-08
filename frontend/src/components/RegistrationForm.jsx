@@ -1,15 +1,11 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import MyFormField from './MyFormField';
 import loginImage from '../images/login.jpg';
-import AuthService from '../services/AuthService.js';
-import { actions as authenticatedActions } from '../store/slices/authenticatedSlice.js';
-import { actions as channelsActions } from '../store/slices/channelsSlice.js';
-import { actions as messagesActions } from '../store/slices/messagesSlice.js';
 import { authenticationRequest } from '../store/slices/authenticatedSlice.js';
+import {useTranslation} from "react-i18next";
 
 const SignupSchema = Yup.object().shape({
   username: Yup.string()
@@ -24,30 +20,15 @@ const SignupSchema = Yup.object().shape({
 
 const RegistrationForm = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const { t } = useTranslation();
+
 
   return (
     <Formik
       initialValues={{ username: '', password: '' }}
       validationSchema={SignupSchema}
       onSubmit={(values) => {
-          dispatch(authenticationRequest(values));
-        /*
-        try {
-          const { token, username } = await AuthService.login(values);
-          localStorage.setItem('token', token);
-          dispatch(authenticatedActions.setUsername(username));
-          dispatch(authenticatedActions.setAuthenticated(true));
-          const channels = await AuthService.getChannels();
-          const messages = await AuthService.getMessages();
-          dispatch(channelsActions.addChannels(channels));
-          dispatch(messagesActions.addMessages(messages));
-
-        } catch (e) {
-          throw new Error(e)
-        }
-
-         */
+          dispatch(authenticationRequest({...values, url: '/login'}));
       }}
     >
       {() => (
@@ -59,31 +40,33 @@ const RegistrationForm = () => {
 
             <Form className="col-12 col-md-6 mt-3 mt-md-0">
               <h1 className="text-center mb-4">
-                Войти
+                {t('loginPage.title')}
               </h1>
               <MyFormField
                 name="username"
-                text="Пароль"
-                autoComplete="current-password"
+                text={t('loginPage.form.username')}
+                autoComplete="username"
                 initialClass="mb-3"
               />
               <MyFormField
                 name="password"
-                text="Ваше имя"
-                autoComplete="username"
+                text={t('loginPage.form.password')}
+                autoComplete="password"
                 initialClass="mb-4"
               />
 
-              <button type="submit" className="w-100 mb-3 btn btn-outline-primary">Войти</button>
+              <button type="submit" className="w-100 mb-3 btn btn-outline-primary">
+                {t('loginPage.button')}
+              </button>
             </Form>
           </div>
           <div className="card-footer p-4">
             <div className="text-center">
               <span>
-                Нет аккаунта?
+                {t('loginPage.footer.text')}
               </span>
-              <a href="/register">
-                Регистрация
+              <a href="/signup">
+                {t('loginPage.footer.signUpLink')}
               </a>
             </div>
           </div>

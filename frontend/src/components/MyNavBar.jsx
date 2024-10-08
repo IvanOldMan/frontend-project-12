@@ -3,28 +3,34 @@ import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {actions as authenticatedActions} from "../store/slices/authenticatedSlice.js";
 import logo from "../images/Hexlet-logo.png";
+import {useTranslation} from "react-i18next";
+import {Container} from "react-bootstrap";
+import Navbar from 'react-bootstrap/Navbar';
 
-const NavBar = () => {
+const MyNavBar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isHaveToken = !!localStorage.getItem('token');
+  const { t } = useTranslation();
+  const isHaveToken = !!localStorage.getItem('AUTH_TOKEN');
 
   const outHandler = () => {
-    localStorage.removeItem("token");
-    dispatch(authenticatedActions.setUsername(''));
+    localStorage.clear();
     dispatch(authenticatedActions.setAuthenticated(false));
     navigate('/login');
   }
   return (
   <nav className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
-    <div className="container">
-          <a className="navbar-brand" href="/">
-            Hexlet Chat
-          </a>
-          {isHaveToken && <button className="btn btn-primary" type="button" onClick={outHandler}>Выйти</button>}
-    </div>
+    <Container>
+      <Navbar.Brand href="/">
+
+        {t('navBar.title')}
+      </Navbar.Brand>
+    </Container>
+    {isHaveToken && <button className="btn btn-primary" type="button" onClick={outHandler}>
+      {t('navBar.button')}
+    </button>}
   </nav>
   );
 };
 
-export default NavBar;
+export default MyNavBar;

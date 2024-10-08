@@ -6,11 +6,11 @@ const RootPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const currentToken = localStorage.getItem('token');
+    const currentToken = localStorage.getItem('AUTH_TOKEN');
     if (!currentToken) {
       navigate('/login');
     }
-  }, [localStorage])
+  }, [])
 
   return (
     <div>
