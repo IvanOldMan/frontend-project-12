@@ -1,73 +1,108 @@
-import React from 'react';
-import {useDispatch} from "react-redux";
-import {Form, Formik} from "formik";
-import loginImage from "../images/registration.jpg";
-import MyFormField from "./MyFormField";
-import * as Yup from "yup";
-import {authenticationRequest} from "../store/slices/authenticatedSlice";
-import {useTranslation} from "react-i18next";
-
-const SignupSchema = Yup.object().shape({
-  username: Yup.string()
-  .min(2, 'Минимум 2 буквы')
-  .max(50, 'Максимум 50 букв')
-  .required(''),
-  password: Yup.string()
-  .min(4, 'Минимум 4 символа')
-  .max(20, 'Максимум 20 символов')
-  .required(''),
-});
+import React, {useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Formik } from 'formik';
+import { authenticationRequest } from '../store/slices/authenticatedSlice';
+import { useTranslation } from 'react-i18next';
+import { Button, FloatingLabel, Form } from 'react-bootstrap';
+import { signupSchema } from '../schema.js'
 
 const SignUpForm = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const usernameInput = useRef(null);
 
+  const { isAuthenticated, error } = useSelector((state) => state.authentication);
+
+  useEffect(() => {
+    usernameInput.current.focus();
+  }, []);
 
   return (
   <Formik
   initialValues={{ username: '', password: '', confirmPassword: '', }}
-  validationSchema={SignupSchema}
-  onSubmit={(values) => {
-    const {confirmPassword, ...rest} = values;
-    dispatch(authenticationRequest({ url:'/signup', ...rest }));
+  validationSchema={signupSchema}
+  onSubmit={async (values, { setErrors }) => {
+    const { username, password } = values;
+    const {payload} = await dispatch(authenticationRequest({ url:'/signup', username, password }));
+
+    if (payload === 409) {
+      setErrors({ username: ' ', password: ' ', confirmPassword: 'Такой пользователь уже существует' });
+    }
   }}
   >
-    {() => (
-    <div className="card shadow-sm">
-      <div className="card-body row p-5">
-        <div className="col-12 col-md-6 d-flex align-items-center justify-content-center">
-          <img src={loginImage} className="rounded-circle" alt="Войти" />
-        </div>
+    {({
+        handleSubmit,
+        handleChange,
+        values,
+        touched,
+        errors,
+      }) => (
+    <Form className="w-50" onSubmit={handleSubmit}>
+      <h1 className="text-center mb-4">
+        {t('signUpPage.title')}
+      </h1>
+      <FloatingLabel
+      label={t('signUpPage.form.username')}
+      className="mb-3">
+        <Form.Control
+        ref={usernameInput}
+        id="username"
+        placeholder="username"
+        autoComplete="username"
+        required
+        value={values.username}
+        onChange={handleChange}
+        isInvalid={!!errors.username && !!touched.username}
+        />
+        <Form.Control.Feedback type="invalid" tooltip>
+          {errors.username}
+        </Form.Control.Feedback>
+      </FloatingLabel>
 
-        <Form className="col-12 col-md-6 mt-3 mt-md-0">
-          <h1 className="text-center mb-4">
-            {t('signUpPage.title')}
-          </h1>
-          <MyFormField
-          name="username"
-          text={t('signUpPage.form.username')}
-          autoComplete="username"
-          initialClass="mb-3"
-          />
-          <MyFormField
-          name="password"
-          text={t('signUpPage.form.password')}
-          autoComplete="password"
-          initialClass="mb-4"
-          />
-          <MyFormField
-          name="confirmPassword"
-          text={t('signUpPage.form.confirmPassword')}
-          autoComplete="password"
-          initialClass="mb-4"
-          />
+      <FloatingLabel
+      label={t('signUpPage.form.password')}
+      className="mb-3">
+        <Form.Control
+        id="password"
+        placeholder="Минимум 6 символов"
+        aria-describedby="passwordHelpBlock"
+        autoComplete="new-password"
+        type="password"
+        required
+        value={values.password}
+        onChange={handleChange}
+        isInvalid={!!errors.password && !!touched.password}
+        />
+        <Form.Control.Feedback type="invalid" tooltip>
+          {errors.password}
+        </Form.Control.Feedback>
+      </FloatingLabel>
 
-          <button type="submit" className="w-100 mb-3 btn btn-outline-primary">
-            {t('signUpPage.button')}
-          </button>
-        </Form>
-      </div>
-    </div>
+      <FloatingLabel
+      label={t('signUpPage.form.confirmPassword')}
+      className="mb-4">
+        <Form.Control
+        id="confirmPassword"
+        placeholder="username"
+        autoComplete="new-password"
+        type="password"
+        required
+        value={values.confirmPassword}
+        onChange={handleChange}
+        isInvalid={!!errors.confirmPassword && !!touched.confirmPassword}
+        />
+        <Form.Control.Feedback type="invalid" tooltip>
+          {errors.confirmPassword}
+        </Form.Control.Feedback>
+      </FloatingLabel>
+      <Button
+        type="submit"
+        variant={'outline-primary'}
+        className="w-100 mb-3"
+      >
+        {t('signUpPage.button')}
+      </Button>
+    </Form>
     )}
   </Formik>
   );

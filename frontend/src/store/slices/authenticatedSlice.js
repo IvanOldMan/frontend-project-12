@@ -1,13 +1,16 @@
-import { createAsyncThunk, createSlice, createEntityAdapter } from '@reduxjs/toolkit';
-import axios from "axios";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 export const authenticationRequest = createAsyncThunk(
-'authenticationRequest', // Id отображается в dev tools и должен быть уникальный у каждого thunk
-async ({ username, password, url }) => {
-  const response = await axios.post(`/api/v1${url}`, { username, password });
-  console.log('RD:', response.data);
-  return response.data;
-}
+  'authenticationRequest', // Id отображается в dev tools и должен быть уникальный у каждого thunk
+  async ({ username, password, url }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`/api/v1${url}`, { username, password });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.status);
+    }
+  },
 );
 
 const initialState = {
@@ -20,16 +23,18 @@ const authenticatedSlice = createSlice({
   name: 'authenticated',
   initialState,
   reducers: {
-    setAuthenticated(state, {payload}) {
+    setAuthenticated(state, { payload }) {
       state.isAuthenticated = payload;
     },
   },
   extraReducers: (builder) => {
     builder
+      // перед отправкой запроса
       .addCase(authenticationRequest.pending, (state) => {
         state.loadingStatus = 'loading';
         state.error = null;
       })
+      // в случае успешного запроса
       .addCase(authenticationRequest.fulfilled, (state, {payload}) => {
         const { token, username } = payload;
         localStorage.setItem('AUTH_TOKEN', token);
@@ -38,11 +43,11 @@ const authenticatedSlice = createSlice({
         state.loadingStatus = 'successful';
         state.error = null;
       })
-      // Вызывается в случае ошибки
-      .addCase(authenticationRequest.rejected, (state, {error}) => {
+      // в случае ошибки запроса
+      .addCase(authenticationRequest.rejected, (state, {payload}) => {
         state.loadingStatus = 'failed';
         state.isAuthenticated = false;
-        state.error = error.message;
+        state.error = payload;
       });
     },
 });

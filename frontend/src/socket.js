@@ -1,59 +1,47 @@
-import { io } from "socket.io-client";
-import store from './store/store.js';
-import { messageApi } from "./store/API/messagesAPI";
+import { io } from 'socket.io-client';
+import { messageApi } from './store/API/messagesAPI.js';
 import { channelApi } from './store/API/channelsAPI.js';
 import { actions as conditionActions } from './store/slices/conditionSlice.js';
-import { useDispatch, useSelector } from "react-redux";
+import store from './store/store.js';
 
-const socket = io();
+export default function webSocketInit() {
+  // Создаем экземпляр сокета
+  const socket = io();
 
-export default class SocketInit {
-  static messages() {
-    socket.on('newMessage', (payload) => {
+  socket
+    .on('newMessage', (payload) => {
       store.dispatch(
-      messageApi.util.updateQueryData('getMessages', undefined, (draftMessage) => {
-        //console.log(payload); // => { body: "new message", channelId: 7, id: 8, username: "admin" }
-        draftMessage.push(payload);
-      }),
-      )
-    });
-  };
-
-  static channels() {
-    const { activeChannelId, defaultChannelId, defaultChannelName } = useSelector((state) => state.condition);
-    const dispatch = useDispatch();
-
-    socket.on('newChannel', (payload) => {
+        messageApi.util.updateQueryData('getMessages', '', (draftMessages) => {
+          draftMessages.push(payload);
+        }),
+      );
+    })
+    .on('newChannel', (payload) => {
       store.dispatch(
-      channelApi.util.updateQueryData('getChannels', undefined, (draftChannels) => {
-        //console.log(payload); // => { body: "new message", channelId: 7, id: 8, username: "admin" }
-        draftChannels.push(payload);
-      }),
-      )
-    });
-
-    socket.on('renameChannel', ({ id, name}) => {
+        channelApi.util.updateQueryData('getChannels', '', (draftChannels) => {
+          draftChannels.push(payload);
+        }),
+      );
+    })
+    .on('renameChannel', ({ id, name }) => {
       store.dispatch(
-      channelApi.util.updateQueryData('getChannels', undefined, (draftChannels) => {
-        //{ id: 7, name: "new name channel", removable: true }
-        draftChannels.find((channel) => channel.id === id).name = name;
-      }),
-      )
-    });
-
-    socket.on('removeChannel', ({ id }) => {
+        channelApi.util.updateQueryData('getChannels', '', (draftChannels) => {
+          draftChannels.find((channel) => channel.id === id).name = name;
+        }),
+      );
+    })
+    .on('removeChannel', ({ id }) => {
       store.dispatch(
-      channelApi.util.updateQueryData('getChannels', undefined, (draftChannels) => {
-        //console.log(payload); // => { id: 6 };
-        if (id === activeChannelId) {
-          dispatch(conditionActions.setActiveChannel({
-            activeChannelId: defaultChannelId,
-            activeChannelName: defaultChannelName,
-          }));
-        }
-        return draftChannels.filter((channel) => channel.id !== id);
-      }),
-      )
+        channelApi.util.updateQueryData('getChannels', '', (draftChannels) => {
+          const state = store.getState();
+          if (id === state.condition.activeChannelId) {
+            store.dispatch(conditionActions.setActiveChannel({
+              activeChannelId: state.condition.defaultChannelId,
+              activeChannelName: state.condition.defaultChannelName,
+            }));
+          }
+          return draftChannels.filter((channel) => channel.id !== id);
+        }),
+      );
     });
-  }
 }

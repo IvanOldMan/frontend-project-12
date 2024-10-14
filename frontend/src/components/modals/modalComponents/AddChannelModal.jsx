@@ -1,91 +1,101 @@
-import React from 'react';
-import Modal from 'react-bootstrap/Modal';
-import {useDispatch, useSelector} from "react-redux";
-import {actions as modalActions} from "../../../store/slices/modalSlice.js";
-import {Field, Form, Formik} from "formik";
-import * as Yup from "yup";
-import {useAddChannelMutation} from "../../../store/API/channelsAPI";
-import {actions as conditionActions} from "../../../store/slices/conditionSlice";
-import {toast} from "react-toastify";
-import {useTranslation} from "react-i18next";
+import React, { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import * as Yup from 'yup';
+import { Formik } from 'formik';
+import { Modal, Form, Button } from 'react-bootstrap';
 import leoProfanity from 'leo-profanity';
-
-const SignupSchema = Yup.object().shape({
-  name: Yup.string()
-  .min(3, '')
-  .max(20, '')
-  .required('')
-});
+import { toast } from 'react-toastify';
+import {useAddChannelMutation, useGetChannelsQuery} from '../../../store/API/channelsAPI.js';
+import { actions as modalActions } from '../../../store/slices/modalSlice.js';
+import { actions as conditionActions } from '../../../store/slices/conditionSlice.js';
+import { channelNameSchema } from '../../../schema.js'
+import { channelApi } from '../../../store/API/channelsAPI.js';
 
 const AddChannelModal = () => {
-  const { activeChannelId, activeChannelName } = useSelector((state) => state.condition);
+  const {data: channels, error, isLoading} = useGetChannelsQuery('');
   const { isShown } = useSelector((state) => state.modal);
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const addChannelInput = useRef(null);
+
+  useEffect(() => {
+    addChannelInput.current.focus();
+  }, []);
 
   const [
     addChannel,
-    { error: addChannelError, isLoading: isAddingChannel },
+    { error: addChannelError },
   ] = useAddChannelMutation();
 
-  const closeModalHandler = () => dispatch(modalActions.isModalOpen(false));
-
-
+  const closeModalHandler = () => dispatch(modalActions.closeModal());
 
   return (
-  <Modal
-  show={isShown}
-  onHide={closeModalHandler}
-  aria-labelledby="contained-modal-title-vcenter"
-  centered
-  >
-    <Modal.Header closeButton>
-      <Modal.Title>
-        Добавить канал
-      </Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
-      <Formik
-      initialValues={{ name: '' }}
-      validationSchema={SignupSchema}
-      onSubmit={async (values, actions) => {
-        const channelName = values.name;
-        const filteredChannelName = leoProfanity.clean(channelName);
-        console.log('fn', typeof filteredChannelName);
-        const response = await addChannel(filteredChannelName);
-        addChannelError ? toast.error(t('toast.errors.loadingData')) : toast.success(t('toast.channel.add'));
-        console.log('add', response.data)
-        const { name, id } = response.data;
-        dispatch(conditionActions.setActiveChannel({
-          activeChannelId: id,
-          activeChannelName: name,
-        })
-        );
-        closeModalHandler();
+    <Modal
+      show={isShown}
+      onHide={closeModalHandler}
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>
+          Добавить канал
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Formik
+          initialValues={{ name: '' }}
+          validationSchema={channelNameSchema}
+          onSubmit={async (values, {setErrors}) => {
+            const channelName = values.name;
+            const a = channels.map(({name}) => name);
+            if (a.includes(channelName)) {
+              setErrors({name: 'Должно быть уникальным'});
+            } else {
+              const filteredChannelName = leoProfanity.clean(channelName);
+              const response = await addChannel(filteredChannelName);
+              addChannelError ? toast.error(t('toast.errors.loadingData')) : toast.success(t('toast.channel.add'));
+              const { name, id } = response.data;
+              dispatch(conditionActions.setActiveChannel({
+                activeChannelId: id,
+                activeChannelName: name,
+              }));
+              closeModalHandler();
+            }
 
-      }}
-      >
-        {() => (
-        <Form>
-          <div>
-            <Field id="name" name="name" className="mb-2 form-control"/>
-            <label htmlFor="name" className="visually-hidden">Имя канала</label>
-            <div className="invalid-feedback"></div>
-            <div className="d-flex justify-content-end">
-              <button type="button" className="me-2 btn btn-secondary" onClick={closeModalHandler}>
-                Отменить
-              </button>
-              <button type="submit" className="btn btn-primary">
-                Добавить
-              </button>
-            </div>
-          </div>
-        </Form>
-        )}
-      </Formik>
-
-    </Modal.Body>
-  </Modal>
+          }}
+        >
+          {({
+            handleSubmit,
+            handleChange,
+            values,
+            touched,
+            errors,
+          }) => (
+            <Form onSubmit={handleSubmit}>
+              <Form.Group controlId="name">
+                <Form.Control
+                  ref={addChannelInput}
+                  className="mb-2"
+                  name="name"
+                  value={values.name}
+                  onChange={handleChange}
+                  isInvalid={!!errors.name && !!touched.name}
+                />
+                <Form.Label className="visually-hidden">Имя канала</Form.Label>
+                <Form.Control.Feedback type="invalid">
+                  {errors.name}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <div className="d-flex justify-content-end">
+                <Button className="me-2" variant="secondary" onClick={closeModalHandler}>Отменить</Button>
+                <Button type="submit">Отправить</Button>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </Modal.Body>
+    </Modal>
   );
 };
 

@@ -12,7 +12,6 @@ const modalComponents = {
 
 const ModalContainer = () => {
   const { type } = useSelector((state) => state.modal);
-  console.log(type)
 
   return (
   <>

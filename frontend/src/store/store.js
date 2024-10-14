@@ -5,7 +5,6 @@ import modalReducer from './slices/modalSlice.js';
 import { channelApi } from './API/channelsAPI.js';
 import { messageApi } from './API/messagesAPI.js';
 
-
 export default configureStore({
   reducer: {
     authentication: authenticatedReducer,
@@ -14,9 +13,6 @@ export default configureStore({
     [channelApi.reducerPath]: channelApi.reducer,
     [messageApi.reducerPath]: messageApi.reducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat([
-      channelApi.middleware,
-      messageApi.middleware,
-    ]),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware()
+    .concat([channelApi.middleware, messageApi.middleware]),
 });

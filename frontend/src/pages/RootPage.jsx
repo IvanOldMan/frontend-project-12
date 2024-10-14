@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import GeneralPage from "./GeneralPage";
+import ChatPage from "./ChatPage";
 import {useNavigate} from "react-router-dom";
 
 const RootPage = () => {
@@ -13,9 +13,9 @@ const RootPage = () => {
   }, [])
 
   return (
-    <div>
-      <GeneralPage />
-    </div>
+    <>
+      <ChatPage />
+    </>
   );
 };
 

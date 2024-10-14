@@ -3,24 +3,20 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const channelApi = createApi({
   reducerPath: 'channelApi',
   baseQuery: fetchBaseQuery({
+    prepareHeaders: (headers) => {
+      headers.set('Authorization', `Bearer ${localStorage.getItem('AUTH_TOKEN')}`);
+      return headers;
+    },
     baseUrl: '/api/v1/channels',
   }),
   endpoints: (builder) => ({
     getChannels: builder.query({
-      query: () => ({
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('AUTH_TOKEN')}`,
-        },
-
-      }),
+      query: () => '',
       providesTags: ['Channel'],
     }),
     addChannel: builder.mutation({
       query: (channelData) => ({
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('AUTH_TOKEN')}`,
-        },
         body: {name: channelData},
       }),
       invalidatesTags: ['Channel'],
@@ -29,9 +25,6 @@ export const channelApi = createApi({
       query: (id) => ({
         url: id,
         method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('AUTH_TOKEN')}`,
-        },
       }),
       invalidatesTags: ['Channel'],
     }),
@@ -39,9 +32,6 @@ export const channelApi = createApi({
       query: ({ id, name }) => ({
         url: id,
         method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('AUTH_TOKEN')}`,
-        },
         body: { name },
       }),
       invalidatesTags: ['Channel'],

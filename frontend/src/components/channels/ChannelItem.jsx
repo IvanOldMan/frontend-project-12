@@ -1,10 +1,8 @@
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import cn from "classnames";
 import { actions as conditionActions } from '../../store/slices/conditionSlice.js';
 import { actions as modalActions } from '../../store/slices/modalSlice.js';
 import {Button, ButtonGroup, Dropdown, DropdownButton} from "react-bootstrap";
-import DropDown from "../DropDown";
 import {useTranslation} from "react-i18next";
 
 const ChannelItem = ({ channel }) => {
@@ -21,25 +19,28 @@ const ChannelItem = ({ channel }) => {
     );
   }
   const removeHandler = () => {
-    dispatch(modalActions.setChannelID(channel.id));
-    dispatch(modalActions.isModalOpen(true));
-    dispatch(modalActions.setModalType('remove'));
+    dispatch(modalActions.removeChannelModal(channel.id));
   }
   const editHandler = () => {
-    dispatch(modalActions.setChannelID(channel.id));
-    dispatch(modalActions.setChannelName(channel.name));
-    dispatch(modalActions.isModalOpen(true));
-    dispatch(modalActions.setModalType('edit'));
+    dispatch(modalActions.editChannelModal({
+      id: channel.id,
+      name: channel.name,
+    }));
   }
 
   return (
     channel.removable
     ?
-    <Dropdown className="w-100 rounded-0 text-start"  as={ButtonGroup} role="group">
-      <Button variant={variant} onClick={clickHandler}>{t('channelsContainer.prefix')}{channel.name}</Button>
-
-      <Dropdown.Toggle variant={variant} split id="dropdown-split-basic" />
-
+    <Dropdown className="d-flex" as={ButtonGroup} role="group">
+      <Button className="w-100 rounded-0 text-start text-truncate" variant={variant} onClick={clickHandler}>
+        <span>
+          {t('channelsContainer.prefix')}
+        </span>
+        {channel.name}
+      </Button>
+      <Dropdown.Toggle variant={variant} split className="flex-grow-0">
+        <span className="visually-hidden">Управление каналом</span>
+      </Dropdown.Toggle>
       <Dropdown.Menu>
         <Dropdown.Item onClick={removeHandler}>Удалить</Dropdown.Item>
         <Dropdown.Item onClick={editHandler}>Изменить</Dropdown.Item>

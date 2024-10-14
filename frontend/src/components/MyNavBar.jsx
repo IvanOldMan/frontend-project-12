@@ -1,11 +1,9 @@
 import React from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {useNavigate} from "react-router-dom";
-import {actions as authenticatedActions} from "../store/slices/authenticatedSlice.js";
-import logo from "../images/Hexlet-logo.png";
-import {useTranslation} from "react-i18next";
-import {Container} from "react-bootstrap";
-import Navbar from 'react-bootstrap/Navbar';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { Button, Container, Navbar } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { actions as authenticatedActions } from '../store/slices/authenticatedSlice.js';
 
 const MyNavBar = () => {
   const dispatch = useDispatch();
@@ -17,19 +15,23 @@ const MyNavBar = () => {
     localStorage.clear();
     dispatch(authenticatedActions.setAuthenticated(false));
     navigate('/login');
-  }
+  };
   return (
-  <nav className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
-    <Container>
-      <Navbar.Brand href="/">
-
-        {t('navBar.title')}
-      </Navbar.Brand>
-    </Container>
-    {isHaveToken && <button className="btn btn-primary" type="button" onClick={outHandler}>
-      {t('navBar.button')}
-    </button>}
-  </nav>
+    <Navbar
+      expand="lg"
+      bg="white"
+      variant="light"
+      className="shadow-sm"
+    >
+      <Container>
+        <Navbar.Brand href="/">
+          {t('navBar.title')}
+        </Navbar.Brand>
+        {(isHaveToken && <Button onClick={outHandler}>
+          {t('navBar.button')}
+        </Button>)}
+      </Container>
+    </Navbar>
   );
 };
 

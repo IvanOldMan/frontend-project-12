@@ -1,15 +1,15 @@
+import React from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import LoginPage from './pages/LoginPage.jsx';
+import RootPage from './pages/RootPage.jsx';
+import ErrorPage from './pages/ErrorPage.jsx';
+import MyNavBar from './components/MyNavBar.jsx';
+import SignUpPage from './pages/SignUpPage.jsx';
+import ModalContainer from './components/modals/ModalContainer.jsx';
 import './App.css';
-import {BrowserRouter, Route, Routes} from "react-router-dom";
-import LoginPage from "./pages/LoginPage";
-import RootPage from "./pages/RootPage";
-import ErrorPage from "./pages/ErrorPage";
-import React from "react";
-import MyNavBar from "./components/MyNavBar";
-import SignUpPage from "./pages/SignUpPage";
 
-function App() {
-
-  return (
+const App = () => (
   <div className="d-flex flex-column h-100">
     <BrowserRouter>
       <MyNavBar />
@@ -20,9 +20,20 @@ function App() {
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </BrowserRouter>
+    <ModalContainer />
+    <ToastContainer
+      position="top-right"
+      autoClose={5000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme="light"
+    />
   </div>
-
-  );
-}
+);
 
 export default App;

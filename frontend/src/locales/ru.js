@@ -5,9 +5,9 @@ export default {
       button: 'Выйти',
     },
     loginPage: {
-      title: 'Вход',
+      title: 'Войти',
       form: {
-        username: 'Ваше имя',
+        username: 'Ваш ник',
         password: 'Пароль',
       },
       button: 'Войти',
@@ -51,6 +51,15 @@ export default {
         network: 'Ошибка сети',
         loadingData: 'Ошибка загрузки',
       }
+    },
+    schema: {
+      username: 'От 3 до 20 символов',
+      required: 'обязательное поле',
+      password: 'Не менее 6 символов',
+      confirmPassword: 'Пароли должны совпадать',
+      duplicateChannel: 'Должно быть уникальным',
+      signupError: 'Такой пользователь уже существует',
+      loginError: 'Неверные имя пользователя или пароль'
     }
   },
 };
