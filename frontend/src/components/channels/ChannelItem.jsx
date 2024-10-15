@@ -46,7 +46,7 @@ const ChannelItem = ({ channel }) => {
       </Dropdown.Toggle>
       <Dropdown.Menu>
         <Dropdown.Item onClick={removeHandler}>Удалить</Dropdown.Item>
-        <Dropdown.Item onClick={editHandler}>Изменить</Dropdown.Item>
+        <Dropdown.Item onClick={editHandler}>Переименовать</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
     :
