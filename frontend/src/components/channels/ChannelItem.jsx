@@ -1,32 +1,35 @@
 import React from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { actions as conditionActions } from '../../store/slices/conditionSlice.js';
 import { actions as modalActions } from '../../store/slices/modalSlice.js';
-import {Button, ButtonGroup, Dropdown, DropdownButton} from "react-bootstrap";
-import {useTranslation} from "react-i18next";
+import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
+
 
 const ChannelItem = ({ channel }) => {
   const { activeChannelId } = useSelector((state) => state.condition);
-  //const classList = cn("w-100 rounded-0 text-start");
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const variant = channel.id === activeChannelId ? 'secondary' : 'pills';
+
   const clickHandler = () => {
     dispatch(conditionActions.setActiveChannel({
         activeChannelId: channel.id,
         activeChannelName: channel.name,
       })
     );
-  }
+  };
+
   const removeHandler = () => {
     dispatch(modalActions.removeChannelModal(channel.id));
-  }
+  };
+
   const editHandler = () => {
     dispatch(modalActions.editChannelModal({
       id: channel.id,
       name: channel.name,
     }));
-  }
+  };
 
   return (
     channel.removable
@@ -47,7 +50,14 @@ const ChannelItem = ({ channel }) => {
       </Dropdown.Menu>
     </Dropdown>
     :
-    <Button className="w-100 rounded-0 text-start" variant={variant} onClick={clickHandler}># {channel.name}</Button>
+    <Button
+      className="w-100 rounded-0 text-start"
+      variant={variant}
+      onClick={clickHandler}
+    >
+      #
+      {channel.name}
+    </Button>
   );
 };
 

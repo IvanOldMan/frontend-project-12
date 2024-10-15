@@ -1,17 +1,15 @@
-import React, {useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik } from 'formik';
-import { authenticationRequest } from '../store/slices/authenticatedSlice';
-import { useTranslation } from 'react-i18next';
 import { Button, FloatingLabel, Form } from 'react-bootstrap';
-import { signupSchema } from '../schema.js'
+import { useTranslation } from 'react-i18next';
+import { authenticationRequest } from '../store/slices/authenticatedSlice';
+import { signupSchema } from '../schema.js';
 
 const SignUpForm = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const usernameInput = useRef(null);
-
-  const { isAuthenticated, error } = useSelector((state) => state.authentication);
 
   useEffect(() => {
     usernameInput.current.focus();
@@ -19,16 +17,16 @@ const SignUpForm = () => {
 
   return (
   <Formik
-  initialValues={{ username: '', password: '', confirmPassword: '', }}
-  validationSchema={signupSchema}
-  onSubmit={async (values, { setErrors }) => {
-    const { username, password } = values;
-    const {payload} = await dispatch(authenticationRequest({ url:'/signup', username, password }));
+    initialValues={{ username: '', password: '', confirmPassword: '', }}
+    validationSchema={signupSchema}
+    onSubmit={async (values, { setErrors }) => {
+      const { username, password } = values;
+      const {payload} = await dispatch(authenticationRequest({ url:'/signup', username, password }));
 
-    if (payload === 409) {
-      setErrors({ username: ' ', password: ' ', confirmPassword: 'Такой пользователь уже существует' });
-    }
-  }}
+      if (payload === 409) {
+        setErrors({ username: ' ', password: ' ', confirmPassword: 'Такой пользователь уже существует' });
+      }
+    }}
   >
     {({
         handleSubmit,
@@ -42,17 +40,18 @@ const SignUpForm = () => {
         {t('signUpPage.title')}
       </h1>
       <FloatingLabel
-      label={t('signUpPage.form.username')}
-      className="mb-3">
+        label={t('signUpPage.form.username')}
+        className="mb-3"
+      >
         <Form.Control
-        ref={usernameInput}
-        id="username"
-        placeholder="username"
-        autoComplete="username"
-        required
-        value={values.username}
-        onChange={handleChange}
-        isInvalid={!!errors.username && !!touched.username}
+          ref={usernameInput}
+          id="username"
+          placeholder="username"
+          autoComplete="username"
+          required
+          value={values.username}
+          onChange={handleChange}
+          isInvalid={!!errors.username && !!touched.username}
         />
         <Form.Control.Feedback type="invalid" tooltip>
           {errors.username}
@@ -60,18 +59,19 @@ const SignUpForm = () => {
       </FloatingLabel>
 
       <FloatingLabel
-      label={t('signUpPage.form.password')}
-      className="mb-3">
+        label={t('signUpPage.form.password')}
+        className="mb-3"
+      >
         <Form.Control
-        id="password"
-        placeholder="Минимум 6 символов"
-        aria-describedby="passwordHelpBlock"
-        autoComplete="new-password"
-        type="password"
-        required
-        value={values.password}
-        onChange={handleChange}
-        isInvalid={!!errors.password && !!touched.password}
+          id="password"
+          placeholder="Минимум 6 символов"
+          aria-describedby="passwordHelpBlock"
+          autoComplete="new-password"
+          type="password"
+          required
+          value={values.password}
+          onChange={handleChange}
+          isInvalid={!!errors.password && !!touched.password}
         />
         <Form.Control.Feedback type="invalid" tooltip>
           {errors.password}
@@ -79,17 +79,18 @@ const SignUpForm = () => {
       </FloatingLabel>
 
       <FloatingLabel
-      label={t('signUpPage.form.confirmPassword')}
-      className="mb-4">
+        label={t('signUpPage.form.confirmPassword')}
+        className="mb-4"
+      >
         <Form.Control
-        id="confirmPassword"
-        placeholder="username"
-        autoComplete="new-password"
-        type="password"
-        required
-        value={values.confirmPassword}
-        onChange={handleChange}
-        isInvalid={!!errors.confirmPassword && !!touched.confirmPassword}
+          id="confirmPassword"
+          placeholder="username"
+          autoComplete="new-password"
+          type="password"
+          required
+          value={values.confirmPassword}
+          onChange={handleChange}
+          isInvalid={!!errors.confirmPassword && !!touched.confirmPassword}
         />
         <Form.Control.Feedback type="invalid" tooltip>
           {errors.confirmPassword}
