@@ -36,7 +36,7 @@ const ChannelItem = ({ channel }) => {
     ?
     <Dropdown className="d-flex" as={ButtonGroup} role="group">
       <Button className="w-100 rounded-0 text-start text-truncate" variant={variant} onClick={clickHandler}>
-        <span>
+        <span className="me-1">
           {t('channelsContainer.prefix')}
         </span>
         {channel.name}
@@ -51,11 +51,13 @@ const ChannelItem = ({ channel }) => {
     </Dropdown>
     :
     <Button
-      className="w-100 rounded-0 text-start"
-      variant={variant}
-      onClick={clickHandler}
+    className="w-100 rounded-0 text-start"
+    variant={variant}
+    onClick={clickHandler}
     >
-      #
+      <span className="me-1">
+        {t('channelsContainer.prefix')}
+      </span>
       {channel.name}
     </Button>
   );

@@ -1,13 +1,12 @@
 import React from 'react';
-import { useDispatch, useSelector } from "react-redux";
-import { useRemoveChannelMutation } from "../../../store/API/channelsAPI";
-import { actions as modalActions } from "../../../store/slices/modalSlice";
-import Modal from "react-bootstrap/Modal";
-import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
-import { actions as conditionActions } from "../../../store/slices/conditionSlice";
-import {useGetMessagesQuery, useRemoveMessageMutation} from "../../../store/API/messagesAPI";
-import {Button} from "react-bootstrap";
+import { useDispatch, useSelector } from 'react-redux';
+import { useRemoveChannelMutation } from '../../../store/API/channelsAPI';
+import { actions as modalActions } from '../../../store/slices/modalSlice';
+import { Button, Modal } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+import { actions as conditionActions } from '../../../store/slices/conditionSlice';
+import {useGetMessagesQuery, useRemoveMessageMutation} from '../../../store/API/messagesAPI';
 
 const RemoveChannelModal = () => {
   const { isShown, channelID } = useSelector((state) => state.modal);
@@ -40,9 +39,8 @@ const RemoveChannelModal = () => {
         activeChannelName: defaultChannelName,
       }))
     }
-
     dispatch(modalActions.closeModal());
-  }
+  };
 
   return (
   <Modal
@@ -53,24 +51,27 @@ const RemoveChannelModal = () => {
   >
     <Modal.Header closeButton>
       <Modal.Title>
-        Удалить канал
+        {t('modal.removeChannel.title')}
       </Modal.Title>
     </Modal.Header>
     <Modal.Body>
-      <p className="lead">Уверены?</p>
+      <p className="lead">
+        {t('modal.removeChannel.body')}
+      </p>
       <div className="d-flex justify-content-end">
         <Button
-        className="me-2"
-        variant="secondary"
-        onClick={closeModalHandler}
+          className="me-2"
+          variant="secondary"
+          onClick={closeModalHandler}
         >
-          Отменить
+          {t('modal.buttons.close')}
         </Button>
         <Button
-        type="submit"
-        onClick={removeHandler}
+          type="submit"
+          onClick={removeHandler}
+          variant="danger"
         >
-          Отправить
+          {t('modal.buttons.remove')}
         </Button>
       </div>
     </Modal.Body>

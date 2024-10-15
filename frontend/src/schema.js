@@ -1,4 +1,4 @@
-import * as Yup from "yup";
+import * as Yup from 'yup';
 
 const channelNameSchema = Yup.object().shape({
   name: Yup.string()

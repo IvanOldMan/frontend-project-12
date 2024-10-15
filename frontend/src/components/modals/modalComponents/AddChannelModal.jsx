@@ -30,6 +30,24 @@ const AddChannelModal = () => {
 
   const closeModalHandler = () => dispatch(modalActions.closeModal());
 
+  const submitHandler = async (values, {setErrors}) => {
+    const channelName = values.name;
+    const a = channels.map(({name}) => name);
+    if (a.includes(channelName)) {
+      setErrors({name: t('modal.error')});
+    } else {
+      const filteredChannelName = leoProfanity.clean(channelName);
+      const response = await addChannel(filteredChannelName);
+      addChannelError ? toast.error(t('toast.errors.loadingData')) : toast.success(t('toast.channel.add'));
+      const { name, id } = response.data;
+      dispatch(conditionActions.setActiveChannel({
+        activeChannelId: id,
+        activeChannelName: name,
+      }));
+      closeModalHandler();
+    }
+  };
+
   return (
     <Modal
       show={isShown}
@@ -39,31 +57,14 @@ const AddChannelModal = () => {
     >
       <Modal.Header closeButton>
         <Modal.Title>
-          Добавить канал
+          {t('modal.addChannel.title')}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Formik
           initialValues={{ name: '' }}
           validationSchema={channelNameSchema}
-          onSubmit={async (values, {setErrors}) => {
-            const channelName = values.name;
-            const a = channels.map(({name}) => name);
-            if (a.includes(channelName)) {
-              setErrors({name: 'Должно быть уникальным'});
-            } else {
-              const filteredChannelName = leoProfanity.clean(channelName);
-              const response = await addChannel(filteredChannelName);
-              addChannelError ? toast.error(t('toast.errors.loadingData')) : toast.success(t('toast.channel.add'));
-              const { name, id } = response.data;
-              dispatch(conditionActions.setActiveChannel({
-                activeChannelId: id,
-                activeChannelName: name,
-              }));
-              closeModalHandler();
-            }
-
-          }}
+          onSubmit={submitHandler}
         >
           {({
             handleSubmit,
@@ -82,14 +83,28 @@ const AddChannelModal = () => {
                   onChange={handleChange}
                   isInvalid={!!errors.name && !!touched.name}
                 />
-                <Form.Label className="visually-hidden">Имя канала</Form.Label>
+                <Form.Label
+                  className="visually-hidden"
+                >
+                  {t('modal.addChannel.label')}
+                </Form.Label>
                 <Form.Control.Feedback type="invalid">
                   {errors.name}
                 </Form.Control.Feedback>
               </Form.Group>
               <div className="d-flex justify-content-end">
-                <Button className="me-2" variant="secondary" onClick={closeModalHandler}>Отменить</Button>
-                <Button type="submit">Отправить</Button>
+                <Button
+                  className="me-2"
+                  variant="secondary"
+                  onClick={closeModalHandler}
+                >
+                  {t('modal.buttons.close')}
+                </Button>
+                <Button
+                  type="submit"
+                >
+                  {t('modal.buttons.submit')}
+                </Button>
               </div>
             </Form>
           )}

@@ -17,7 +17,7 @@ export const channelApi = createApi({
     addChannel: builder.mutation({
       query: (channelData) => ({
         method: 'POST',
-        body: {name: channelData},
+        body: { name: channelData },
       }),
       invalidatesTags: ['Channel'],
     }),

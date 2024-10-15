@@ -1,13 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEditChannelMutation, useGetChannelsQuery} from '../../../store/API/channelsAPI';
-import { actions as conditionActions} from '../../../store/slices/conditionSlice.js';
-import { Formik} from 'formik';
-import { actions as modalActions } from '../../../store/slices/modalSlice';
+import { Button, Form, Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+import { Formik } from 'formik';
 import leoProfanity from 'leo-profanity';
-import { Button, Form, Modal } from 'react-bootstrap';
+import { useEditChannelMutation, useGetChannelsQuery} from '../../../store/API/channelsAPI';
+import { actions as conditionActions} from '../../../store/slices/conditionSlice.js';
+import { actions as modalActions } from '../../../store/slices/modalSlice';
 import { channelNameSchema } from '../../../schema.js'
 
 
@@ -30,42 +30,44 @@ const EditChannelModal = () => {
 
   const closeModalHandler = () => dispatch(modalActions.closeModal());
 
+  const submitHandler = async (values, { setErrors }) => {
+    const newChannelName = values.name;
+    const a = channels.map(({name}) => name);
+    if (a.includes(newChannelName)) {
+      setErrors({name: t('modal.error')});
+    } else {
+      const filteredNewName = leoProfanity.clean(newChannelName);
+      const data = {id: channelID, name: filteredNewName}
+      const response = await editChannel(data);
+      const { id, name } = response.data;
+      if (id === activeChannelId) {
+        dispatch(conditionActions.setActiveChannel({
+          activeChannelId: id,
+          activeChannelName: name,
+        }))
+      }
+      editChannelError ? toast.error(t('toast.errors.loadingData')) : toast.success(t('toast.channel.edit'));
+      closeModalHandler();
+    }
+  }
+
   return (
   <Modal
-  show={isShown}
-  onHide={closeModalHandler}
-  aria-labelledby="contained-modal-title-vcenter"
-  centered
+    show={isShown}
+    onHide={closeModalHandler}
+    aria-labelledby="contained-modal-title-vcenter"
+    centered
   >
     <Modal.Header closeButton>
       <Modal.Title>
-        Переименовать канал
+        {t('modal.editChannel.title')}
       </Modal.Title>
     </Modal.Header>
     <Modal.Body>
       <Formik
         validationSchema={channelNameSchema}
         initialValues={{ name: channelName }}
-        onSubmit={async (values, { setErrors }) => {
-          const newChannelName = values.name;
-          const a = channels.map(({name}) => name);
-          if (a.includes(newChannelName)) {
-            setErrors({name: 'Должно быть уникальным'});
-          } else {
-            const filteredNewName = leoProfanity.clean(newChannelName);
-            const data = {id: channelID, name: filteredNewName}
-            const response = await editChannel(data);
-            const { id, name } = response.data;
-            if (id === activeChannelId) {
-              dispatch(conditionActions.setActiveChannel({
-                activeChannelId: id,
-                activeChannelName: name,
-              }))
-            }
-            editChannelError ? toast.error(t('toast.errors.loadingData')) : toast.success(t('toast.channel.edit'));
-            closeModalHandler();
-          }
-        }}
+        onSubmit={submitHandler}
       >
         {({
             handleSubmit,
@@ -84,14 +86,26 @@ const EditChannelModal = () => {
             onChange={handleChange}
             isInvalid={!!errors.name && !!touched.name}
             />
-            <Form.Label className="visually-hidden">Переименовать канал</Form.Label>
+            <Form.Label className="visually-hidden">
+              {t('modal.editChannel.label')}
+            </Form.Label>
             <Form.Control.Feedback type="invalid">
               {errors.name}
             </Form.Control.Feedback>
           </Form.Group>
           <div className="d-flex justify-content-end">
-            <Button className="me-2" variant="secondary" onClick={closeModalHandler}>Отменить</Button>
-            <Button type="submit">Отправить</Button>
+            <Button
+              className="me-2"
+              variant="secondary"
+              onClick={closeModalHandler}
+            >
+              {t('modal.buttons.close')}
+            </Button>
+            <Button
+              type="submit"
+            >
+              {t('modal.buttons.submit')}
+            </Button>
           </div>
         </Form>
         )}

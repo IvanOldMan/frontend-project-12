@@ -11,7 +11,7 @@ const conditionSlice = createSlice({
   name: 'condition',
   initialState,
   reducers: {
-    setActiveChannel(state, {payload}) {
+    setActiveChannel(state, { payload }) {
       const { activeChannelId, activeChannelName } = payload;
       state.activeChannelId = activeChannelId;
       state.activeChannelName = activeChannelName;

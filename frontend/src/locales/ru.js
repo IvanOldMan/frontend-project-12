@@ -14,7 +14,7 @@ export default {
       footer: {
         text: 'Нет аккаунта? ',
         signUpLink: 'Регистрация',
-      }
+      },
     },
     signUpPage: {
       title: 'Регистрация',
@@ -27,7 +27,7 @@ export default {
     },
     channelsContainer: {
       title: 'Каналы',
-      prefix: '# ',
+      prefix: '#',
     },
     messagesContainer: {
       messageCount: {
@@ -45,21 +45,40 @@ export default {
       channel: {
         add: 'Канал создан',
         edit: 'Канал переименован',
-        remove: 'Канал удалён'
+        remove: 'Канал удалён',
       },
       errors: {
         network: 'Ошибка сети',
         loadingData: 'Ошибка загрузки',
-      }
+      },
     },
     schema: {
       username: 'От 3 до 20 символов',
       required: 'обязательное поле',
       password: 'Не менее 6 символов',
       confirmPassword: 'Пароли должны совпадать',
-      duplicateChannel: 'Должно быть уникальным',
       signupError: 'Такой пользователь уже существует',
-      loginError: 'Неверные имя пользователя или пароль'
+      loginError: 'Неверные имя пользователя или пароль',
+    },
+    modal: {
+      addChannel: {
+        title: 'Добавить канал',
+        label: 'Имя канала',
+      },
+      editChannel: {
+        title: 'Переименовать канал',
+        label: 'Переименовать канал',
+      },
+      removeChannel: {
+        title: 'Удалить канал',
+        body: 'Уверены?',
+      },
+      buttons: {
+        close: 'Отменить',
+        submit: 'Отправить',
+        remove: 'Удалить',
+      },
+      error: 'Должно быть уникальным',
     }
   },
 };

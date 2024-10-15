@@ -13,15 +13,17 @@ import webSocketInit from './socket.js';
 const init = async () => {
   // создание экземпляра i18next
   const i18n = i18next.createInstance();
+
   await i18n
-    .use(initReactI18next)
-    .init({
-      fallbackLng: 'ru',
-      debug: true,
-      resources,
-    });
+  .use(initReactI18next)
+  .init({
+    fallbackLng: 'ru',
+    debug: true,
+    resources,
+  });
   // создание экземпляра Socket.io
   webSocketInit();
+
 
   return (
     <RollbarProvider config={rollbarConfig}>
@@ -39,3 +41,4 @@ const init = async () => {
 reportWebVitals();
 
 export default init;
+

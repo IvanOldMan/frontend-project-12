@@ -37,39 +37,42 @@ const LoginForm = () => {
           <h1 className="text-center mb-4">
             {t('loginPage.title')}
           </h1>
-          <FloatingLabel
-            label={t('loginPage.form.username')}
-            className="mb-3"
-          >
+          <Form.Floating className="mb-3">
             <Form.Control
-              ref={usernameInput}
-              id="username"
-              placeholder="username"
-              autoComplete="username"
-              required
-              value={values.username}
-              onChange={handleChange}
-              isInvalid={!!errors.password && !!touched.password}
+            ref={usernameInput}
+            id="username"
+            name="username"
+            placeholder={t('loginPage.form.username')}
+            autoComplete="username"
+            required
+            value={values.username}
+            onChange={handleChange}
+            isInvalid={!!errors.password && !!touched.password}
             />
-          </FloatingLabel>
-          <FloatingLabel
-            label={t('loginPage.form.password')}
-            className="mb-4"
-          >
+            <Form.Label htmlFor="username">
+              {t('loginPage.form.username')}
+            </Form.Label>
+          </Form.Floating>
+
+          <Form.Floating className="mb-4">
             <Form.Control
-              id="password"
-              placeholder="password"
-              autoComplete="current-password"
-              type="password"
-              required
-              value={values.password}
-              onChange={handleChange}
-              isInvalid={!!errors.password && !!touched.password}
+            type="password"
+            id="password"
+            name="password"
+            placeholder={t('loginPage.form.password')}
+            autoComplete="current-password"
+            required
+            value={values.password}
+            onChange={handleChange}
+            isInvalid={!!errors.password && !!touched.password}
             />
+            <Form.Label htmlFor="password">
+              {t('loginPage.form.password')}
+            </Form.Label>
             <Form.Control.Feedback type="invalid" tooltip>
               {errors.password}
             </Form.Control.Feedback>
-          </FloatingLabel>
+          </Form.Floating>
           <Button variant="outline-primary" className="w-100 mb-3" type="submit">
             {t('loginPage.button')}
           </Button>

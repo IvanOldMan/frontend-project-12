@@ -35,7 +35,7 @@ const authenticatedSlice = createSlice({
         state.error = null;
       })
       // в случае успешного запроса
-      .addCase(authenticationRequest.fulfilled, (state, {payload}) => {
+      .addCase(authenticationRequest.fulfilled, (state, { payload }) => {
         const { token, username } = payload;
         localStorage.setItem('AUTH_TOKEN', token);
         localStorage.setItem('USER_NAME', username);
@@ -44,12 +44,12 @@ const authenticatedSlice = createSlice({
         state.error = null;
       })
       // в случае ошибки запроса
-      .addCase(authenticationRequest.rejected, (state, {payload}) => {
+      .addCase(authenticationRequest.rejected, (state, { payload }) => {
         state.loadingStatus = 'failed';
         state.isAuthenticated = false;
         state.error = payload;
       });
-    },
+  },
 });
 
 export const { actions } = authenticatedSlice;

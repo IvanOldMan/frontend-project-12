@@ -34,7 +34,6 @@ const modalSlice = createSlice({
       state.type = null;
     },
 
-
     isModalOpen(state, { payload }) {
       state.isShown = payload;
     },
