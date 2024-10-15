@@ -53,7 +53,7 @@ const SignUpForm = () => {
           isInvalid={!!errors.username && !!touched.username}
         />
         <Form.Label htmlFor="username">
-          {t('loginPage.form.username')}
+          {t('signUpPage.form.username')}
         </Form.Label>
         <Form.Control.Feedback type="invalid" tooltip>
           {errors.username}
