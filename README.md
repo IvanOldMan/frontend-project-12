@@ -1,4 +1,4 @@
-# [chat icon](https://github.com/IvanOldMan/frontend-project-12/blob/main/image/chatIcon.png) Training project on JS "Chat (Slack)" !
+# ![](https://github.com/IvanOldMan/frontend-project-12/blob/main/image/chatIcon.png) Training project on JS "Chat (Slack)" !
 
 __Be always in touch!!!__
 
