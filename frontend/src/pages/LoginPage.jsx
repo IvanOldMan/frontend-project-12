@@ -1,26 +1,49 @@
-import React, {useEffect} from 'react';
-import RegistrationForm from "../components/RegistrationForm";
-import {useNavigate} from "react-router-dom";
-import {useSelector} from "react-redux";
+import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import {
+  Card,
+  Col,
+  Container,
+  Row,
+  Image,
+} from 'react-bootstrap';
+import PageContainer from '../components/PageContainer.jsx';
+import LoginForm from '../components/forms/LoginForm.jsx';
+import loginImage from '../images/login.jpg';
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.authentication);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/');
     }
-  }, [isAuthenticated])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated]);
 
   return (
-  <div className="container-fluid h-100">
-    <div className="row align-content-center justify-content-center h-100">
-      <div className="col-12 col-md-8 col-xxl-6">
-        <RegistrationForm />
-      </div>
-    </div>
-  </div>
+    <PageContainer>
+      <Card.Body as={Row} className="p-5">
+        <Col xs={12} md={6} className="d-flex align-items-center justify-content-center">
+          <Image src={loginImage} roundedCircle alt="Войти" />
+        </Col>
+        <LoginForm />
+      </Card.Body>
+      <Card.Footer className="p-4">
+        <Container className="text-center">
+          <span>
+            {t('loginPage.footer.text')}
+          </span>
+          <a href="/signup">
+            {t('loginPage.footer.signUpLink')}
+          </a>
+        </Container>
+      </Card.Footer>
+    </PageContainer>
   );
 };
 

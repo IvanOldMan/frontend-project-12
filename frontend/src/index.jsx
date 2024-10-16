@@ -1,18 +1,10 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
+import 'bootstrap';
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import  './styles/styles.scss';
-import  'bootstrap';
-import store from './store/store.js';
-import { Provider } from 'react-redux';
+import './styles/styles.scss';
+import init from './utils/init.jsx';
 
-const root = ReactDOM.createRoot(document.getElementById('chat'));
-root.render(
-  <Provider store={store}>
-      <App />
-  </Provider>
-);
-
-reportWebVitals();
+(async function runApp() {
+  const chat = ReactDOM.createRoot(document.getElementById('chat'));
+  chat.render(await init());
+}());
