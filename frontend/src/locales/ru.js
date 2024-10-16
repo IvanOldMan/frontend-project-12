@@ -16,6 +16,14 @@ export default {
         signUpLink: 'Регистрация',
       },
     },
+    errorPage: {
+      title: 'Страница не найдена',
+      alt: 'Страница не найдена',
+      body: {
+        text: 'Но вы можете перейти ',
+        link: 'на главную страницу',
+      },
+    },
     signUpPage: {
       title: 'Регистрация',
       form: {
@@ -79,6 +87,6 @@ export default {
         remove: 'Удалить',
       },
       error: 'Должно быть уникальным',
-    }
+    },
   },
 };

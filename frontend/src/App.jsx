@@ -10,30 +10,32 @@ import ModalContainer from './components/modals/ModalContainer.jsx';
 import './App.css';
 
 const App = () => (
+<>
   <div className="d-flex flex-column h-100">
     <BrowserRouter>
-      <MyNavBar />
+      <MyNavBar/>
       <Routes>
-        <Route path="/" element={<RootPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
-        <Route path="*" element={<ErrorPage />} />
+        <Route path="/" element={<RootPage/>}/>
+        <Route path="/login" element={<LoginPage/>}/>
+        <Route path="/signup" element={<SignUpPage/>}/>
+        <Route path="*" element={<ErrorPage/>}/>
       </Routes>
     </BrowserRouter>
-    <ModalContainer />
-    <ToastContainer
-      position="top-right"
-      autoClose={5000}
-      hideProgressBar={false}
-      newestOnTop={false}
-      closeOnClick
-      rtl={false}
-      pauseOnFocusLoss
-      draggable
-      pauseOnHover
-      theme="light"
-    />
+    <ModalContainer/>
   </div>
+  <ToastContainer
+    position="top-right"
+    autoClose={5000}
+    hideProgressBar={false}
+    newestOnTop={false}
+    closeOnClick
+    rtl={false}
+    pauseOnFocusLoss
+    draggable
+    pauseOnHover
+    theme="light"
+  />
+</>
 );
 
 export default App;

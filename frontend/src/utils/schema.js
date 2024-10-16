@@ -8,6 +8,12 @@ const channelNameSchema = Yup.object().shape({
     .required('обязательное поле'),
 });
 
+const messageSchema = Yup.object().shape({
+  body: Yup.string()
+    .trim()
+    .required(),
+});
+
 const signupSchema = Yup.object().shape({
   username: Yup.string()
     .min(3, 'От 3 до 20 символов')
@@ -21,4 +27,4 @@ const signupSchema = Yup.object().shape({
     .required('обязательное поле'),
 });
 
-export { channelNameSchema, signupSchema };
+export { channelNameSchema, messageSchema, signupSchema };

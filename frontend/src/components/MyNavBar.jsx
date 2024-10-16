@@ -27,9 +27,7 @@ const MyNavBar = () => {
         <Navbar.Brand href="/">
           {t('navBar.title')}
         </Navbar.Brand>
-        {(isHaveToken && <Button onClick={outHandler}>
-          {t('navBar.button')}
-        </Button>)}
+        {(isHaveToken && <Button onClick={outHandler}>{t('navBar.button')}</Button>)}
       </Container>
     </Navbar>
   );

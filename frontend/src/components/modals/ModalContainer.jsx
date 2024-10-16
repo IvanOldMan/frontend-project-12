@@ -1,8 +1,8 @@
 import React from 'react';
-import AddChannelModal from "./modalComponents/AddChannelModal";
-import RemoveChannelModal from "./modalComponents/RemoveChannelModal";
-import EditChannelModal from "./modalComponents/EditChannelModal";
-import {useSelector} from "react-redux";
+import { useSelector } from 'react-redux';
+import AddChannelModal from './modalComponents/AddChannelModal';
+import RemoveChannelModal from './modalComponents/RemoveChannelModal';
+import EditChannelModal from './modalComponents/EditChannelModal';
 
 const modalComponents = {
   add: <AddChannelModal />,
@@ -14,9 +14,10 @@ const ModalContainer = () => {
   const { type } = useSelector((state) => state.modal);
 
   return (
-  <>
-    {modalComponents[type]}
-  </>
+    // eslint-disable-next-line
+    <>
+      {modalComponents[type]}
+    </>
   );
 };
 

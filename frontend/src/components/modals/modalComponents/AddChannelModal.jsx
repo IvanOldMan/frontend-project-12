@@ -1,19 +1,17 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { Modal, Form, Button } from 'react-bootstrap';
 import leoProfanity from 'leo-profanity';
 import { toast } from 'react-toastify';
-import {useAddChannelMutation, useGetChannelsQuery} from '../../../store/API/channelsAPI.js';
+import { useAddChannelMutation, useGetChannelsQuery } from '../../../store/API/channelsAPI.js';
 import { actions as modalActions } from '../../../store/slices/modalSlice.js';
 import { actions as conditionActions } from '../../../store/slices/conditionSlice.js';
-import { channelNameSchema } from '../../../schema.js'
-import { channelApi } from '../../../store/API/channelsAPI.js';
+import { channelNameSchema } from '../../../utils/schema.js';
 
 const AddChannelModal = () => {
-  const {data: channels, error, isLoading} = useGetChannelsQuery('');
+  const { data: channels } = useGetChannelsQuery('');
   const { isShown } = useSelector((state) => state.modal);
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -30,14 +28,15 @@ const AddChannelModal = () => {
 
   const closeModalHandler = () => dispatch(modalActions.closeModal());
 
-  const submitHandler = async (values, {setErrors}) => {
+  const submitHandler = async (values, { setErrors }) => {
     const channelName = values.name;
-    const a = channels.map(({name}) => name);
+    const a = channels.map(({ name }) => name);
     if (a.includes(channelName)) {
-      setErrors({name: t('modal.error')});
+      setErrors({ name: t('modal.error') });
     } else {
       const filteredChannelName = leoProfanity.clean(channelName);
       const response = await addChannel(filteredChannelName);
+      // eslint-disable-next-line
       addChannelError ? toast.error(t('toast.errors.loadingData')) : toast.success(t('toast.channel.add'));
       const { name, id } = response.data;
       dispatch(conditionActions.setActiveChannel({

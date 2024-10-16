@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Button, FloatingLabel, Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import { Formik } from 'formik';
-import { authenticationRequest } from '../store/slices/authenticatedSlice.js';
+import { authenticationRequest } from '../../store/slices/authenticatedSlice.js';
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -39,15 +39,15 @@ const LoginForm = () => {
           </h1>
           <Form.Floating className="mb-3">
             <Form.Control
-            ref={usernameInput}
-            id="username"
-            name="username"
-            placeholder={t('loginPage.form.username')}
-            autoComplete="username"
-            required
-            value={values.username}
-            onChange={handleChange}
-            isInvalid={!!errors.password && !!touched.password}
+              ref={usernameInput}
+              id="username"
+              name="username"
+              placeholder={t('loginPage.form.username')}
+              autoComplete="username"
+              required
+              value={values.username}
+              onChange={handleChange}
+              isInvalid={!!errors.password && !!touched.password}
             />
             <Form.Label htmlFor="username">
               {t('loginPage.form.username')}
@@ -56,15 +56,15 @@ const LoginForm = () => {
 
           <Form.Floating className="mb-4">
             <Form.Control
-            type="password"
-            id="password"
-            name="password"
-            placeholder={t('loginPage.form.password')}
-            autoComplete="current-password"
-            required
-            value={values.password}
-            onChange={handleChange}
-            isInvalid={!!errors.password && !!touched.password}
+              type="password"
+              id="password"
+              name="password"
+              placeholder={t('loginPage.form.password')}
+              autoComplete="current-password"
+              required
+              value={values.password}
+              onChange={handleChange}
+              isInvalid={!!errors.password && !!touched.password}
             />
             <Form.Label htmlFor="password">
               {t('loginPage.form.password')}

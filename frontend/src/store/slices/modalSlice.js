@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign*/
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
@@ -32,19 +33,6 @@ const modalSlice = createSlice({
       state.channelID = null;
       state.channelName = null;
       state.type = null;
-    },
-
-    isModalOpen(state, { payload }) {
-      state.isShown = payload;
-    },
-    setChannelID(state, { payload }) {
-      state.channelID = payload;
-    },
-    setChannelName(state, { payload }) {
-      state.channelName = payload;
-    },
-    setModalType(state, { payload }) {
-      state.type = payload;
     },
   },
 });

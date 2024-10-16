@@ -1,8 +1,8 @@
 import { io } from 'socket.io-client';
-import { messageApi } from './store/API/messagesAPI.js';
-import { channelApi } from './store/API/channelsAPI.js';
-import { actions as conditionActions } from './store/slices/conditionSlice.js';
-import store from './store/store.js';
+import { messageApi } from '../store/API/messagesAPI.js';
+import { channelApi } from '../store/API/channelsAPI.js';
+import { actions as conditionActions } from '../store/slices/conditionSlice.js';
+import store from '../store/store.js';
 
 export default function webSocketInit() {
   // Создаем экземпляр сокета
@@ -26,6 +26,7 @@ export default function webSocketInit() {
     .on('renameChannel', ({ id, name }) => {
       store.dispatch(
         channelApi.util.updateQueryData('getChannels', '', (draftChannels) => {
+          // eslint-disable-next-line
           draftChannels.find((channel) => channel.id === id).name = name;
         }),
       );
