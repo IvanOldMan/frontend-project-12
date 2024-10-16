@@ -67,7 +67,7 @@ export default {
       },
       editChannel: {
         title: 'Переименовать канал',
-        label: 'Переименовать канал',
+        label: 'Имя канала',
       },
       removeChannel: {
         title: 'Удалить канал',
