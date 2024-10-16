@@ -7,7 +7,7 @@ import {
   Col,
   Container,
   Row,
-  Image
+  Image,
 } from 'react-bootstrap';
 import PageContainer from '../components/PageContainer.jsx';
 import LoginForm from '../components/forms/LoginForm.jsx';
@@ -22,6 +22,7 @@ const LoginPage = () => {
     if (isAuthenticated) {
       navigate('/');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
   return (

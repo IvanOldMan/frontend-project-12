@@ -13,9 +13,9 @@ const MessagesContainer = () => {
   const { data: messages } = useGetMessagesQuery('');
 
   const currentMessages = messages
-    ?
+    ? // eslint-disable-line
     messages.filter(({ channelId }) => channelId === activeChannelId)
-    :
+    : // eslint-disable-line
     [];
 
   return (
@@ -34,11 +34,11 @@ const MessagesContainer = () => {
         </div>
         <div id="messages-box" className="chat-messages overflow-auto px-5">
           {currentMessages.map((message) => (
+            // eslint-disable-next-line
             <MessageItem
               message={message}
               key={message.id}
-            />),
-          )}
+            />))}
         </div>
         <MessageForm />
       </div>

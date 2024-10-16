@@ -63,7 +63,7 @@ const MessageForm = () => {
               />
               <Button
                 type="submit"
-                variant={'group-vertical'}
+                variant="group-vertical"
                 disabled={!isValid || !dirty || isAddingMessage}
               >
                 <svg
