@@ -21,6 +21,7 @@ const EditChannelModal = () => {
 
   useEffect(() => {
     editChannelInput.current.focus();
+    editChannelInput.current.select();
   }, []);
 
   const [
