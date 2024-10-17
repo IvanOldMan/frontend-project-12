@@ -26,6 +26,7 @@ export default function webSocketInit() {
     .on('renameChannel', ({ id, name }) => {
       store.dispatch(
         channelApi.util.updateQueryData('getChannels', '', (draftChannels) => {
+          // eslint-disable-next-line
           draftChannels.find((channel) => channel.id === id).name = name;
         }),
       );
