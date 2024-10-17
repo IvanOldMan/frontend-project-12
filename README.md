@@ -1,4 +1,4 @@
-# ![](https://github.com/IvanOldMan/frontend-project-12/blob/main/image/chatIcon.png) Training project on JS "Chat (Slack)" !
+# ![](https://github.com/IvanOldMan/frontend-project-12/blob/main/image/chat_icon.png) Training project on JS "Chat (Slack)" !
 
 __Be always in touch!!!__
 
@@ -13,6 +13,11 @@ This project is a chat in which you can:
 
 The [___demo page___](https://frontend-project-12-mtr7.onrender.com/) of the expanded project on PaaS
 
+## Requirements
+- ![](https://github.com/IvanOldMan/frontend-project-12/blob/main/image/nodejs_icon.png) v __16.0.0__ _or later_
+
+- ![](https://github.com/IvanOldMan/frontend-project-12/blob/main/image/npm_icon.png) v __7.10.0__ _or later_
+
 ## Installation
 Run the following commands to install:
 
@@ -26,9 +31,17 @@ Run the following commands to install:
   sudo npm link
 ```
 
-## Development
+## Deployment
 
 To deploy this project run
+
+```bash
+  make deploy
+```
+
+## Development
+
+To develop this project run
 
 ```bash
   make develop

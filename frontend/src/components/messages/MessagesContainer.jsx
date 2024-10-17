@@ -13,9 +13,9 @@ const MessagesContainer = () => {
   const { data: messages } = useGetMessagesQuery('');
 
   const currentMessages = messages
-    ? // eslint-disable-line
+    ?
     messages.filter(({ channelId }) => channelId === activeChannelId)
-    : // eslint-disable-line
+    :
     [];
 
   return (

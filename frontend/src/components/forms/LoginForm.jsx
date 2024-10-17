@@ -18,7 +18,6 @@ const LoginForm = () => {
     <Formik
       initialValues={{ username: '', password: '' }}
       onSubmit={async (values, { setErrors }) => {
-        // eslint-disable-next-line
         const { username, password } = values;
         const { payload } = await dispatch(authenticationRequest({ url: '/login', username, password }));
         if (payload === 401) {

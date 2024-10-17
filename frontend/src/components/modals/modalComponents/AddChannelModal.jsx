@@ -36,7 +36,6 @@ const AddChannelModal = () => {
     } else {
       const filteredChannelName = leoProfanity.clean(channelName);
       const response = await addChannel(filteredChannelName);
-      // eslint-disable-next-line
       addChannelError ? toast.error(t('toast.errors.loadingData')) : toast.success(t('toast.channel.add'));
       const { name, id } = response.data;
       dispatch(conditionActions.setActiveChannel({

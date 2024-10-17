@@ -51,7 +51,6 @@ const ChannelsContainer = () => {
         fill
       >
         {channels && channels.map((channel) => (
-          // eslint-disable-next-line
           <Nav.Item
             as="li"
             className="w-100"

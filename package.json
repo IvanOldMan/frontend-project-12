@@ -6,7 +6,7 @@
   "dependencies": {
     "@hexlet/chat-server": "^2.0.4"
   },
-  "description": "[![Actions Status](https://github.com/IvanOldMan/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/IvanOldMan/frontend-project-12/actions)",
+  "description": "Simplified version (analogue) of chat (Slack)",
   "homepage": "https://github.com/IvanOldMan/frontend-project-12#readme",
   "license": "ISC",
   "main": "src/index.js",
