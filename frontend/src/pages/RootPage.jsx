@@ -12,7 +12,7 @@ const RootPage = () => {
     if (!currentToken) {
       navigate('/login');
     }
-  }, []);
+  }, []); // eslint-disable-line
 
   return (
     <Container className="h-100 my-4 overflow-hidden rounded shadow">

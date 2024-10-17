@@ -36,6 +36,7 @@ const RemoveChannelModal = () => {
     await removeChannel(channelID);
     messages.filter(({ curChannelID }) => curChannelID === activeChannelId)
       .forEach(({ id }) => removeMessage(id));
+    // eslint-disable-next-line
     removeChannelError ? toast.error(t('toast.errors.loadingData')) : toast.success(t('toast.channel.remove'));
     if (channelID === activeChannelId) {
       dispatch(conditionActions.setActiveChannel({

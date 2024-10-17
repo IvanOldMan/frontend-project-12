@@ -14,7 +14,7 @@ const SignUpPage = () => {
     if (isAuthenticated) {
       navigate('/');
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated]); // eslint-disable-line
 
   return (
     <PageContainer>

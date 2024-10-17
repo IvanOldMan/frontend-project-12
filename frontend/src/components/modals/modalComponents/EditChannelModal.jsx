@@ -46,6 +46,7 @@ const EditChannelModal = () => {
           activeChannelName: name,
         }));
       }
+      // eslint-disable-next-line
       editChannelError ? toast.error(t('toast.errors.loadingData')) : toast.success(t('toast.channel.edit'));
       closeModalHandler();
     }

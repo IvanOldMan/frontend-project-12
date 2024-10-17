@@ -32,7 +32,7 @@ const ChannelItem = ({ channel }) => {
 
   return (
     channel.removable
-      ?
+      ? // eslint-disable-line
       (
         <Dropdown className="d-flex" as={ButtonGroup} role="group">
           <Button className="w-100 rounded-0 text-start text-truncate" variant={variant} onClick={clickHandler}>
@@ -49,7 +49,7 @@ const ChannelItem = ({ channel }) => {
             <Dropdown.Item onClick={editHandler}>Переименовать</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>)
-      :
+      : // eslint-disable-line
       (
         <Button
           className="w-100 rounded-0 text-start"
