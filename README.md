@@ -27,21 +27,18 @@ Run the following commands to install:
 ```bash
   make install
 ```
-```bash
-  sudo npm link
-```
 
 ## Deployment
 
-To deploy this project run
+Run the following command to prepare the project for deployment:
 
 ```bash
-  make deploy
+  make build
 ```
 
 ## Development
 
-To develop this project run
+Run the following command to run the project in developer mode:
 
 ```bash
   make develop
