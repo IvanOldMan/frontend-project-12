@@ -4,11 +4,11 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
-import leoProfanity from 'leo-profanity';
 import { useEditChannelMutation, useGetChannelsQuery } from '../../../store/API/channelsAPI';
 import { actions as conditionActions } from '../../../store/slices/conditionSlice.js';
 import { actions as modalActions } from '../../../store/slices/modalSlice';
 import { channelNameSchema } from '../../../utils/schema.js';
+import badWordsDictionary from '../../../utils/badWordsDictionary';
 
 const EditChannelModal = () => {
   const { isShown, channelID, channelName } = useSelector((state) => state.modal);
@@ -17,6 +17,8 @@ const EditChannelModal = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const editChannelInput = useRef(null);
+
+  const filteredChannelName = badWordsDictionary.clean(channelName);
 
   useEffect(() => {
     editChannelInput.current.focus();
@@ -30,14 +32,13 @@ const EditChannelModal = () => {
 
   const closeModalHandler = () => dispatch(modalActions.closeModal());
 
-  const submitHandler = async (values, { setErrors }) => {
-    const newChannelName = values.name;
+  const submitHandler = async ({ name: newChannelName }, { setErrors }) => {
+    const normalizedName = newChannelName.trim();
     const currentChannels = channels.map(({ name }) => name);
-    if (currentChannels.includes(newChannelName)) {
+    if (currentChannels.includes(normalizedName)) {
       setErrors({ name: t('modal.error') });
     } else {
-      const filteredNewName = leoProfanity.clean(newChannelName);
-      const data = { id: channelID, name: filteredNewName };
+      const data = { id: channelID, name: normalizedName };
       const response = await editChannel(data);
       const { id, name } = response.data;
       if (id === activeChannelId) {
@@ -67,7 +68,7 @@ const EditChannelModal = () => {
       <Modal.Body>
         <Formik
           validationSchema={channelNameSchema}
-          initialValues={{ name: channelName }}
+          initialValues={{ name: filteredChannelName }}
           onSubmit={submitHandler}
         >
           {({

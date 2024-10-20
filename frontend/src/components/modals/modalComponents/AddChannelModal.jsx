@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
 import { Modal, Form, Button } from 'react-bootstrap';
-import leoProfanity from 'leo-profanity';
 import { toast } from 'react-toastify';
 import { useAddChannelMutation, useGetChannelsQuery } from '../../../store/API/channelsAPI.js';
 import { actions as modalActions } from '../../../store/slices/modalSlice.js';
@@ -28,14 +27,13 @@ const AddChannelModal = () => {
 
   const closeModalHandler = () => dispatch(modalActions.closeModal());
 
-  const submitHandler = async (values, { setErrors }) => {
-    const channelName = values.name;
-    const a = channels.map(({ name }) => name);
-    if (a.includes(channelName)) {
+  const submitHandler = async ({ name: addChannelName }, { setErrors }) => {
+    const normalizedName = addChannelName.trim();
+    const currentChannels = channels.map(({ name }) => name);
+    if (currentChannels.includes(normalizedName)) {
       setErrors({ name: t('modal.error') });
     } else {
-      const filteredChannelName = leoProfanity.clean(channelName);
-      const response = await addChannel(filteredChannelName);
+      const response = await addChannel(normalizedName);
       // eslint-disable-next-line
       addChannelError ? toast.error(t('toast.errors.loadingData')) : toast.success(t('toast.channel.add'));
       const { name, id } = response.data;
