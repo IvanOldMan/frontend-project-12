@@ -1,32 +1,46 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
+import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { authenticationRequest } from '../../store/slices/authenticatedSlice.js';
-import { signupSchema } from '../../utils/schema.js';
 
 const SignUpForm = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const usernameInput = useRef(null);
 
+  const signupSchema = Yup.object().shape({
+    username: Yup.string()
+      .min(3, t('schema.username'))
+      .max(20, t('schema.username'))
+      .required(t('schema.required')),
+    password: Yup.string()
+      .min(6, t('schema.password'))
+      .required(t('schema.required')),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password'), null], t('schema.confirmPassword'))
+      .required(t('schema.required')),
+  });
+
   useEffect(() => {
     usernameInput.current.focus();
   }, []);
+
+  const handleSubmitForm = async ({ username, password }, { setErrors }) => {
+    const { payload } = await dispatch(authenticationRequest({ url: '/signup', username, password }));
+
+    if (payload === 409) {
+      setErrors({ username: ' ', password: ' ', confirmPassword: t('schema.signupError') });
+    }
+  };
 
   return (
     <Formik
       initialValues={{ username: '', password: '', confirmPassword: '' }}
       validationSchema={signupSchema}
-      onSubmit={async (values, { setErrors }) => {
-        const { username, password } = values;
-        const { payload } = await dispatch(authenticationRequest({ url: '/signup', username, password }));
-
-        if (payload === 409) {
-          setErrors({ username: ' ', password: ' ', confirmPassword: 'Такой пользователь уже существует' });
-        }
-      }}
+      onSubmit={handleSubmitForm}
     >
       {({
         handleSubmit,

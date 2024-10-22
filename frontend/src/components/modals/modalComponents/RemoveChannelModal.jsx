@@ -13,44 +13,38 @@ const RemoveChannelModal = () => {
   const { t } = useTranslation();
 
   const { isShown, channelID } = useSelector((state) => state.modal);
-  const {
-    activeChannelId,
-    defaultChannelId,
-    defaultChannelName,
-  } = useSelector((state) => state.condition);
+  const { activeChannelId } = useSelector((state) => state.condition);
 
   const { data: messages } = useGetMessagesQuery('');
 
-  const [
-    removeChannel,
-    { error: removeChannelError },
-  ] = useRemoveChannelMutation();
-
+  const [removeChannel] = useRemoveChannelMutation();
   const [removeMessage] = useRemoveMessageMutation();
 
-  const closeModalHandler = () => {
+  const handleClose = () => {
     dispatch(modalActions.closeModal());
   };
 
-  const removeHandler = async () => {
-    await removeChannel(channelID);
+  const handleRemove = async () => {
+    try {
+      await removeChannel(channelID).unwrap();
+      toast.success(t('toast.channel.remove'));
+      if (channelID === activeChannelId) {
+        dispatch(conditionActions.setDefaultChannel());
+      }
+    } catch (e) {
+      toast.error(t('toast.errors.remove'));
+    }
+
     messages.filter(({ curChannelID }) => curChannelID === activeChannelId)
       .forEach(({ id }) => removeMessage(id));
-    // eslint-disable-next-line
-    removeChannelError ? toast.error(t('toast.errors.loadingData')) : toast.success(t('toast.channel.remove'));
-    if (channelID === activeChannelId) {
-      dispatch(conditionActions.setActiveChannel({
-        activeChannelId: defaultChannelId,
-        activeChannelName: defaultChannelName,
-      }));
-    }
+
     dispatch(modalActions.closeModal());
   };
 
   return (
     <Modal
       show={isShown}
-      onHide={closeModalHandler}
+      onHide={handleClose}
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
@@ -67,13 +61,13 @@ const RemoveChannelModal = () => {
           <Button
             className="me-2"
             variant="secondary"
-            onClick={closeModalHandler}
+            onClick={handleClose}
           >
             {t('modal.buttons.close')}
           </Button>
           <Button
             type="submit"
-            onClick={removeHandler}
+            onClick={handleRemove}
             variant="danger"
           >
             {t('modal.buttons.remove')}

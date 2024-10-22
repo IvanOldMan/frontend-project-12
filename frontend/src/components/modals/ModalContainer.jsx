@@ -8,6 +8,8 @@ const modalComponents = {
   add: <AddChannelModal />,
   edit: <EditChannelModal />,
   remove: <RemoveChannelModal />,
+  // eslint-disable-next-line
+  close: (<></>),
 };
 
 const ModalContainer = () => {

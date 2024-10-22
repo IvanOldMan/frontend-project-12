@@ -1,13 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Form, Modal } from 'react-bootstrap';
-import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+import * as Yup from 'yup';
+import { toast } from 'react-toastify';
 import { Formik } from 'formik';
 import { useEditChannelMutation, useGetChannelsQuery } from '../../../store/API/channelsAPI';
 import { actions as conditionActions } from '../../../store/slices/conditionSlice.js';
 import { actions as modalActions } from '../../../store/slices/modalSlice';
-import { channelNameSchema } from '../../../utils/schema.js';
 import badWordsDictionary from '../../../utils/badWordsDictionary';
 
 const EditChannelModal = () => {
@@ -18,45 +18,55 @@ const EditChannelModal = () => {
   const { t } = useTranslation();
   const editChannelInput = useRef(null);
 
-  const filteredChannelName = badWordsDictionary.clean(channelName);
+  const channelNameSchema = Yup.object().shape({
+    name: Yup.string()
+      .trim()
+      .min(3, t('schema.username'))
+      .max(20, t('schema.username'))
+      .required(t('schema.required')),
+  });
 
   useEffect(() => {
     editChannelInput.current.focus();
     editChannelInput.current.select();
   }, []);
 
-  const [
-    editChannel,
-    { error: editChannelError },
-  ] = useEditChannelMutation();
+  const filteredChannelName = badWordsDictionary.clean(channelName);
 
-  const closeModalHandler = () => dispatch(modalActions.closeModal());
+  const [editChannel] = useEditChannelMutation();
 
-  const submitHandler = async ({ name: newChannelName }, { setErrors }) => {
+  const handleClose = () => {
+    dispatch(modalActions.closeModal());
+  };
+
+  const handleSubmitForm = async ({ name: newChannelName }, { setErrors }) => {
     const normalizedName = newChannelName.trim();
     const currentChannels = channels.map(({ name }) => name);
-    if (currentChannels.includes(normalizedName)) {
-      setErrors({ name: t('modal.error') });
-    } else {
-      const data = { id: channelID, name: normalizedName };
-      const response = await editChannel(data);
-      const { id, name } = response.data;
-      if (id === activeChannelId) {
-        dispatch(conditionActions.setActiveChannel({
-          activeChannelId: id,
-          activeChannelName: name,
-        }));
+    if (!currentChannels.includes(normalizedName)) {
+      try {
+        const data = { id: channelID, name: normalizedName };
+        const { id, name } = await editChannel(data).unwrap();
+        toast.success(t('toast.channel.edit'));
+
+        if (id === activeChannelId) {
+          dispatch(conditionActions.setActiveChannel({
+            activeChannelId: id,
+            activeChannelName: name,
+          }));
+        }
+      } catch (e) {
+        toast.error(t('toast.errors.edit'));
       }
-      // eslint-disable-next-line
-      editChannelError ? toast.error(t('toast.errors.loadingData')) : toast.success(t('toast.channel.edit'));
-      closeModalHandler();
+      dispatch(modalActions.closeModal());
+    } else {
+      setErrors({ name: t('modal.error') });
     }
   };
 
   return (
     <Modal
       show={isShown}
-      onHide={closeModalHandler}
+      onHide={handleClose}
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
@@ -69,7 +79,7 @@ const EditChannelModal = () => {
         <Formik
           validationSchema={channelNameSchema}
           initialValues={{ name: filteredChannelName }}
-          onSubmit={submitHandler}
+          onSubmit={handleSubmitForm}
         >
           {({
             handleSubmit,
@@ -99,7 +109,7 @@ const EditChannelModal = () => {
                 <Button
                   className="me-2"
                   variant="secondary"
-                  onClick={closeModalHandler}
+                  onClick={handleClose}
                 >
                   {t('modal.buttons.close')}
                 </Button>

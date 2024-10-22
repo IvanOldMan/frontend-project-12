@@ -3,15 +3,13 @@ import { Provider } from 'react-redux';
 import i18next from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { ErrorBoundary, Provider as RollbarProvider } from '@rollbar/react';
-import reportWebVitals from '../reportWebVitals';
 import store from '../store/store';
 import App from '../App.jsx';
-import resources from '../locales';
+import resources from '../assets/locales';
 import rollbarConfig from './rollbarConfig.js';
-import webSocketInit from './socket.js';
+import webSocketInit from './socketInit.js';
 
-const init = async () => {
-  // создание экземпляра i18next
+const initApp = async (socket) => {
   const i18n = i18next.createInstance();
   await i18n
     .use(initReactI18next)
@@ -21,8 +19,7 @@ const init = async () => {
       resources,
     });
 
-  // создание экземпляра Socket.io
-  webSocketInit();
+  webSocketInit(socket, store);
 
   return (
     <RollbarProvider config={rollbarConfig}>
@@ -37,6 +34,4 @@ const init = async () => {
   );
 };
 
-reportWebVitals();
-
-export default init;
+export default initApp;

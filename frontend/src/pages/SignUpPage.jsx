@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { Card, Image } from 'react-bootstrap';
 import SignUpForm from '../components/forms/SignUpForm';
 import PageContainer from '../components/PageContainer';
-import registrationImage from '../images/registration.jpg';
+import registrationImage from '../assets/images/registration.jpg';
 
 const SignUpPage = () => {
   const navigate = useNavigate();

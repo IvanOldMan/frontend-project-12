@@ -5,7 +5,7 @@ const initialState = {
   isShown: false,
   channelID: null,
   channelName: null,
-  type: null,
+  type: 'close',
 };
 
 const modalSlice = createSlice({
@@ -32,7 +32,7 @@ const modalSlice = createSlice({
       state.isShown = false;
       state.channelID = null;
       state.channelName = null;
-      state.type = null;
+      state.type = 'close';
     },
   },
 });

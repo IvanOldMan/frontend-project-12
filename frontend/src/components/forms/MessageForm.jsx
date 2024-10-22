@@ -1,16 +1,22 @@
 import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import leoProfanity from 'leo-profanity';
+import * as Yup from 'yup';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { Formik } from 'formik';
 import { useAddMessageMutation } from '../../store/API/messagesAPI.js';
-import { messageSchema } from '../../utils/schema.js';
+import LocalStorage from '../../utils/LocalStorageAdapter.js';
 
 const MessageForm = () => {
   const { t } = useTranslation();
   const messageInput = useRef(null);
   const { activeChannelId } = useSelector((state) => state.condition);
+
+  const messageSchema = Yup.object().shape({
+    body: Yup.string()
+      .trim()
+      .required(),
+  });
 
   useEffect(() => {
     messageInput.current.focus();
@@ -21,12 +27,11 @@ const MessageForm = () => {
     { isLoading: isAddingMessage },
   ] = useAddMessageMutation();
 
-  const submitHandler = async (values, { resetForm }) => {
-    const { body } = values;
+  const handleSubmitForm = async ({ body }, { resetForm }) => {
     const result = {
-      body: leoProfanity.clean(body),
+      body,
       channelId: activeChannelId,
-      username: localStorage.getItem('USER_NAME'),
+      username: LocalStorage.getUsername(),
     };
     addMessage(result);
     resetForm();
@@ -37,7 +42,7 @@ const MessageForm = () => {
       <Formik
         initialValues={{ body: '' }}
         validationSchema={messageSchema}
-        onSubmit={submitHandler}
+        onSubmit={handleSubmitForm}
       >
         {({
           handleSubmit,

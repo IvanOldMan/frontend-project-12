@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { Container, Row } from 'react-bootstrap';
 import ChannelsContainer from '../components/channels/ChannelsContainer.jsx';
 import MessagesContainer from '../components/messages/MessagesContainer.jsx';
+import LocalStorage from '../utils/LocalStorageAdapter.js';
 
 const RootPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const currentToken = localStorage.getItem('AUTH_TOKEN');
-    if (!currentToken) {
+    if (!LocalStorage.isHaveToken()) {
       navigate('/login');
     }
   }, []); // eslint-disable-line

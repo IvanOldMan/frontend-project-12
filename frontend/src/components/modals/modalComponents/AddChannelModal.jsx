@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
 import { Modal, Form, Button } from 'react-bootstrap';
+import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import { useAddChannelMutation, useGetChannelsQuery } from '../../../store/API/channelsAPI.js';
 import { actions as modalActions } from '../../../store/slices/modalSlice.js';
 import { actions as conditionActions } from '../../../store/slices/conditionSlice.js';
-import { channelNameSchema } from '../../../utils/schema.js';
 
 const AddChannelModal = () => {
   const { data: channels } = useGetChannelsQuery('');
@@ -16,39 +16,48 @@ const AddChannelModal = () => {
   const { t } = useTranslation();
   const addChannelInput = useRef(null);
 
+  const channelNameSchema = Yup.object().shape({
+    name: Yup.string()
+      .trim()
+      .min(3, t('schema.username'))
+      .max(20, t('schema.username'))
+      .required(t('schema.required')),
+  });
+
   useEffect(() => {
     addChannelInput.current.focus();
   }, []);
 
-  const [
-    addChannel,
-    { error: addChannelError },
-  ] = useAddChannelMutation();
+  const [addChannel] = useAddChannelMutation();
 
-  const closeModalHandler = () => dispatch(modalActions.closeModal());
+  const handleClose = () => {
+    dispatch(modalActions.closeModal());
+  };
 
-  const submitHandler = async ({ name: addChannelName }, { setErrors }) => {
+  const handleSubmitForm = async ({ name: addChannelName }, { setErrors }) => {
     const normalizedName = addChannelName.trim();
     const currentChannels = channels.map(({ name }) => name);
-    if (currentChannels.includes(normalizedName)) {
-      setErrors({ name: t('modal.error') });
+    if (!currentChannels.includes(normalizedName)) {
+      try {
+        const { name, id } = await addChannel(normalizedName).unwrap();
+        toast.success(t('toast.channel.add'));
+        dispatch(conditionActions.setActiveChannel({
+          activeChannelId: id,
+          activeChannelName: name,
+        }));
+      } catch (e) {
+        toast.error(t('toast.errors.add'));
+      }
+      dispatch(modalActions.closeModal());
     } else {
-      const response = await addChannel(normalizedName);
-      // eslint-disable-next-line
-      addChannelError ? toast.error(t('toast.errors.loadingData')) : toast.success(t('toast.channel.add'));
-      const { name, id } = response.data;
-      dispatch(conditionActions.setActiveChannel({
-        activeChannelId: id,
-        activeChannelName: name,
-      }));
-      closeModalHandler();
+      setErrors({ name: t('modal.error') });
     }
   };
 
   return (
     <Modal
       show={isShown}
-      onHide={closeModalHandler}
+      onHide={handleClose}
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
@@ -61,7 +70,7 @@ const AddChannelModal = () => {
         <Formik
           initialValues={{ name: '' }}
           validationSchema={channelNameSchema}
-          onSubmit={submitHandler}
+          onSubmit={handleSubmitForm}
         >
           {({
             handleSubmit,
@@ -93,7 +102,7 @@ const AddChannelModal = () => {
                 <Button
                   className="me-2"
                   variant="secondary"
-                  onClick={closeModalHandler}
+                  onClick={handleClose}
                 >
                   {t('modal.buttons.close')}
                 </Button>

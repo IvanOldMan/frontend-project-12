@@ -1,13 +1,8 @@
-import { io } from 'socket.io-client';
 import { messageApi } from '../store/API/messagesAPI.js';
 import { channelApi } from '../store/API/channelsAPI.js';
 import { actions as conditionActions } from '../store/slices/conditionSlice.js';
-import store from '../store/store.js';
 
-export default function webSocketInit() {
-  // Создаем экземпляр сокета
-  const socket = io();
-
+const webSocketInit = (socket, store) => {
   socket
     .on('newMessage', (payload) => {
       store.dispatch(
@@ -36,13 +31,12 @@ export default function webSocketInit() {
         channelApi.util.updateQueryData('getChannels', '', (draftChannels) => {
           const state = store.getState();
           if (id === state.condition.activeChannelId) {
-            store.dispatch(conditionActions.setActiveChannel({
-              activeChannelId: state.condition.defaultChannelId,
-              activeChannelName: state.condition.defaultChannelName,
-            }));
+            store.dispatch(conditionActions.setDefaultChannel());
           }
           return draftChannels.filter((channel) => channel.id !== id);
         }),
       );
     });
-}
+};
+
+export default webSocketInit;

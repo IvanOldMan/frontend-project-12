@@ -4,8 +4,6 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   activeChannelId: '1',
   activeChannelName: 'general',
-  defaultChannelId: '1',
-  defaultChannelName: 'general',
 };
 
 const conditionSlice = createSlice({
@@ -16,6 +14,9 @@ const conditionSlice = createSlice({
       const { activeChannelId, activeChannelName } = payload;
       state.activeChannelId = activeChannelId;
       state.activeChannelName = activeChannelName;
+    },
+    setDefaultChannel() {
+      return initialState;
     },
   },
 });

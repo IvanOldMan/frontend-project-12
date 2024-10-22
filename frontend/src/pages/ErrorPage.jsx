@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Image from 'react-bootstrap/Image';
-import notFoundImage from '../images/notFound.svg';
+import notFoundImage from '../assets/images/notFound.svg';
 
 const ErrorPage = () => {
   const { t } = useTranslation();

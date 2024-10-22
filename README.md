@@ -14,9 +14,9 @@ This project is a chat in which you can:
 The [___demo page___](https://frontend-project-12-mtr7.onrender.com/) of the expanded project on PaaS
 
 ## Requirements
-- __Node__ v __16.0.0__ _or later_
+- ![node](https://github.com/IvanOldMan/frontend-project-12/blob/main/image/nodejs_icon.png) v __16.0.0__ _or later_
 
-- __NPM__ v __7.10.0__ _or later_
+- ![npm](https://github.com/IvanOldMan/frontend-project-12/blob/main/image/npm_icon.png) v __7.10.0__ _or later_
 
 ## Installation
 Run the following commands to install:

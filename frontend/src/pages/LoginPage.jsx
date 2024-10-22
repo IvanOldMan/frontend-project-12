@@ -11,7 +11,8 @@ import {
 } from 'react-bootstrap';
 import PageContainer from '../components/PageContainer.jsx';
 import LoginForm from '../components/forms/LoginForm.jsx';
-import loginImage from '../images/login.jpg';
+import loginImage from '../assets/images/login.jpg';
+import LocalStorage from '../utils/LocalStorageAdapter.js';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const LoginPage = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (LocalStorage.isHaveToken()) {
       navigate('/');
     }
   }, [isAuthenticated]); // eslint-disable-line

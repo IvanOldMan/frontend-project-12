@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useRef} from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Col } from 'react-bootstrap';
@@ -12,23 +12,17 @@ const MessagesContainer = () => {
 
   const { data: messages } = useGetMessagesQuery('');
 
-  //const lastMessageRef = useRef(null);
-
-/*
-  useLayoutEffect(() => {
-    setTimeout(() => {
-      lastMessageRef.current.scrollIntoView({behavior: "smooth"});
-    }, 1500)
-  }, [])
-
- */
-
   const currentMessages = messages
     ? // eslint-disable-line
     messages.filter(({ channelId }) => channelId === activeChannelId)
     : // eslint-disable-line
     [];
-  const lastMessageId = currentMessages.map(({ id }) => id)
+    // пркрутку нужно допилить (сделать плавной)
+  useEffect(() => {
+    const messagesBox = document.getElementById('messages-box');
+    messagesBox.scrollTop = messagesBox.scrollHeight;
+  }, [currentMessages]);
+
   return (
     <Col className="p-0 h-100">
       <div className="d-flex flex-column h-100">
@@ -49,7 +43,6 @@ const MessagesContainer = () => {
             <MessageItem
               message={message}
               key={message.id}
-              //ref={lastMessageId === message.id && lastMessageRef}
             />))}
         </div>
         <MessageForm />

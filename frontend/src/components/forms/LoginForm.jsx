@@ -14,23 +14,25 @@ const LoginForm = () => {
     usernameInput.current.focus();
   }, []);
 
+  const handleSubmitForm = async ({ username, password }, { setErrors }) => {
+    const { payload } = await dispatch(authenticationRequest({ url: '/login', username, password }));
+
+    if (payload === 401) {
+      setErrors({ form: t('schema.loginError') });
+    }
+  };
+
   return (
     <Formik
       initialValues={{ username: '', password: '' }}
-      onSubmit={async (values, { setErrors }) => {
-        const { username, password } = values;
-        const { payload } = await dispatch(authenticationRequest({ url: '/login', username, password }));
-        if (payload === 401) {
-          setErrors({ username: '', password: 'Неверные имя пользователя или пароль' });
-        }
-      }}
+      onSubmit={handleSubmitForm}
     >
       {({
         handleSubmit,
         handleChange,
         values,
-        touched,
         errors,
+        isValid,
       }) => (
         <Form className="col-12 col-md-6 mt-3 mt-md-0" onSubmit={handleSubmit}>
           <h1 className="text-center mb-4">
@@ -46,7 +48,7 @@ const LoginForm = () => {
               required
               value={values.username}
               onChange={handleChange}
-              isInvalid={!!errors.password && !!touched.password}
+              isInvalid={!isValid}
             />
             <Form.Label htmlFor="username">
               {t('loginPage.form.username')}
@@ -63,13 +65,13 @@ const LoginForm = () => {
               required
               value={values.password}
               onChange={handleChange}
-              isInvalid={!!errors.password && !!touched.password}
+              isInvalid={!isValid}
             />
             <Form.Label htmlFor="password">
               {t('loginPage.form.password')}
             </Form.Label>
             <Form.Control.Feedback type="invalid" tooltip>
-              {errors.password}
+              {errors.form}
             </Form.Control.Feedback>
           </Form.Floating>
           <Button variant="outline-primary" className="w-100 mb-3" type="submit">
