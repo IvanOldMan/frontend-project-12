@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Col } from 'react-bootstrap';
@@ -10,14 +10,13 @@ const MessagesContainer = () => {
   const { activeChannelId, activeChannelName } = useSelector((state) => state.condition);
   const { t } = useTranslation();
 
-  const { data: messages } = useGetMessagesQuery('');
+  const { data: messages = [] } = useGetMessagesQuery('');
 
-  const currentMessages = messages
-    ? // eslint-disable-line
-    messages.filter(({ channelId }) => channelId === activeChannelId)
-    : // eslint-disable-line
-    [];
-    // пркрутку нужно допилить (сделать плавной)
+  const currentMessages = useMemo(
+    () => messages.filter(({ channelId }) => channelId === activeChannelId),
+    [activeChannelId, messages],
+  );
+
   useEffect(() => {
     const messagesBox = document.getElementById('messages-box');
     messagesBox.scrollTop = messagesBox.scrollHeight;
