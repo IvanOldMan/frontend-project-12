@@ -1,12 +1,17 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import LocalStorage from '../../utils/LocalStorageAdapter.js';
+import path from '../../utils/routes';
 
 export const messageApi = createApi({
   reducerPath: 'messageApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: '/api/v1/messages',
-    prepareHeaders: (headers) => {
-      headers.set('Authorization', `Bearer ${LocalStorage.getToken()}`);
+    baseUrl: path.api.messages(),
+    prepareHeaders: (headers, { getState }) => {
+      const { token } = getState().authentication;
+
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+
       return headers;
     },
   }),

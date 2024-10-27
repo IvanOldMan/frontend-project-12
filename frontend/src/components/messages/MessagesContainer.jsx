@@ -2,15 +2,14 @@ import React, { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Col } from 'react-bootstrap';
-import { useGetMessagesQuery } from '../../store/API/messagesAPI.js';
 import MessageItem from './MessageItem.jsx';
 import MessageForm from '../forms/MessageForm.jsx';
+import selectors from '../../store/slices/selectors';
 
-const MessagesContainer = () => {
-  const { activeChannelId, activeChannelName } = useSelector((state) => state.condition);
+const MessagesContainer = ({ messages }) => {
+  const activeChannelId = useSelector(selectors.currentChannelID);
+  const activeChannelName = useSelector(selectors.currentChannelName);
   const { t } = useTranslation();
-
-  const { data: messages = [] } = useGetMessagesQuery('');
 
   const currentMessages = useMemo(
     () => messages.filter(({ channelId }) => channelId === activeChannelId),
@@ -38,7 +37,6 @@ const MessagesContainer = () => {
         </div>
         <div id="messages-box" className="chat-messages overflow-auto px-5">
           {currentMessages.map((message) => (
-            // eslint-disable-next-line
             <MessageItem
               message={message}
               key={message.id}

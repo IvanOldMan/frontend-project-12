@@ -1,15 +1,21 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import LocalStorage from '../../utils/LocalStorageAdapter.js';
+import path from '../../utils/routes.js';
 
 export const channelApi = createApi({
   reducerPath: 'channelApi',
   baseQuery: fetchBaseQuery({
-    prepareHeaders: (headers) => {
-      headers.set('Authorization', `Bearer ${LocalStorage.getToken()}`);
+    baseUrl: path.api.channels(),
+    prepareHeaders: (headers, { getState }) => {
+      const { token } = getState().authentication;
+
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+
       return headers;
     },
-    baseUrl: '/api/v1/channels',
   }),
+  tagTypes: ['Channel'],
   endpoints: (builder) => ({
     getChannels: builder.query({
       query: () => '',

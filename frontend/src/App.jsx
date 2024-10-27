@@ -2,23 +2,31 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import LoginPage from './pages/LoginPage.jsx';
-import RootPage from './pages/RootPage.jsx';
 import ErrorPage from './pages/ErrorPage.jsx';
-import MyNavBar from './components/MyNavBar.jsx';
+import NavBar from './components/NavBar.jsx';
 import SignUpPage from './pages/SignUpPage.jsx';
 import ModalContainer from './components/modals/ModalContainer.jsx';
-import './App.css';
+import path from './utils/routes.js';
+import PrivateRout from './components/PrivateRout';
+import ChatPage from './pages/ChatPage';
 
 const App = () => (
   <>
     <div className="d-flex flex-column h-100">
       <BrowserRouter>
-        <MyNavBar />
+        <NavBar />
         <Routes>
-          <Route path="/" element={<RootPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="*" element={<ErrorPage />} />
+          <Route
+            path={path.pages.root()}
+            element={(
+              <PrivateRout>
+                <ChatPage />
+              </PrivateRout>
+            )}
+          />
+          <Route path={path.pages.login()} element={<LoginPage />} />
+          <Route path={path.pages.signup()} element={<SignUpPage />} />
+          <Route path={path.pages.other()} element={<ErrorPage />} />
         </Routes>
       </BrowserRouter>
       <ModalContainer />

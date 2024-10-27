@@ -9,11 +9,14 @@ import { useEditChannelMutation, useGetChannelsQuery } from '../../../store/API/
 import { actions as conditionActions } from '../../../store/slices/conditionSlice.js';
 import { actions as modalActions } from '../../../store/slices/modalSlice';
 import badWordsDictionary from '../../../utils/badWordsDictionary';
+import selectors from '../../../store/slices/selectors';
 
 const EditChannelModal = () => {
-  const { isShown, channelID, channelName } = useSelector((state) => state.modal);
-  const { data: channels } = useGetChannelsQuery('');
-  const { activeChannelId } = useSelector((state) => state.condition);
+  const isShown = useSelector(selectors.isShownModal);
+  const channelID = useSelector(selectors.channelIdModal);
+  const channelName = useSelector(selectors.channelNameModal);
+  const activeChannelId = useSelector(selectors.currentChannelID);
+
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const editChannelInput = useRef(null);
@@ -33,6 +36,7 @@ const EditChannelModal = () => {
 
   const filteredChannelName = badWordsDictionary.clean(channelName);
 
+  const { data: channels } = useGetChannelsQuery('');
   const [editChannel] = useEditChannelMutation();
 
   const handleClose = () => {
@@ -42,6 +46,7 @@ const EditChannelModal = () => {
   const handleSubmitForm = async ({ name: newChannelName }, { setErrors }) => {
     const normalizedName = newChannelName.trim();
     const currentChannels = channels.map(({ name }) => name);
+
     if (!currentChannels.includes(normalizedName)) {
       try {
         const data = { id: channelID, name: normalizedName };

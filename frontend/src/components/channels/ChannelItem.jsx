@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-wrap-multilines */
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -6,9 +5,10 @@ import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
 import { actions as conditionActions } from '../../store/slices/conditionSlice.js';
 import { actions as modalActions } from '../../store/slices/modalSlice.js';
 import badWordsDictionary from '../../utils/badWordsDictionary';
+import selectors from '../../store/slices/selectors';
 
 const ChannelItem = ({ channel }) => {
-  const { activeChannelId } = useSelector((state) => state.condition);
+  const activeChannelId = useSelector(selectors.currentChannelID);
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -23,19 +23,23 @@ const ChannelItem = ({ channel }) => {
   };
 
   const removeHandler = () => {
-    dispatch(modalActions.removeChannelModal(channel.id));
+    dispatch(modalActions.openModal({
+      channelID: channel.id,
+      type: 'remove',
+    }));
   };
 
   const editHandler = () => {
-    dispatch(modalActions.editChannelModal({
-      id: channel.id,
-      name: channel.name,
+    dispatch(modalActions.openModal({
+      channelID: channel.id,
+      channelName: channel.name,
+      type: 'edit',
     }));
   };
 
   return (
     channel.removable
-      ? // eslint-disable-line
+      ?
       (
         <Dropdown className="d-flex" as={ButtonGroup} role="group">
           <Button className="w-100 rounded-0 text-start text-truncate" variant={variant} onClick={clickHandler}>
@@ -52,7 +56,7 @@ const ChannelItem = ({ channel }) => {
             <Dropdown.Item onClick={editHandler}>Переименовать</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>)
-      : // eslint-disable-line
+      :
       (
         <Button
           className="w-100 rounded-0 text-start"

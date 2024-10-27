@@ -1,24 +1,32 @@
 import React, { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Button, Form } from 'react-bootstrap';
 import { Formik } from 'formik';
-import { authenticationRequest } from '../../store/slices/authenticatedSlice.js';
+import path from '../../utils/routes.js';
+import { useLoginMutation } from '../../store/API/authorizationAPI';
+import { actions as AuthActions } from '../../store/slices/authenticatedSlice';
 
 const LoginForm = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const usernameInput = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     usernameInput.current.focus();
   }, []);
 
-  const handleSubmitForm = async ({ username, password }, { setErrors }) => {
-    const { payload } = await dispatch(authenticationRequest({ url: '/login', username, password }));
+  const [login, { isLoading }] = useLoginMutation();
 
-    if (payload === 401) {
-      setErrors({ form: t('schema.loginError') });
+  const handleSubmitForm = async (values, { setErrors }) => {
+    try {
+      const data = await login(values).unwrap();
+      dispatch(AuthActions.setAuthenticated(data));
+      navigate(path.pages.root());
+    } catch (e) {
+      setErrors({ form: t(`errors.${e.status}`) });
     }
   };
 
@@ -74,7 +82,12 @@ const LoginForm = () => {
               {errors.form}
             </Form.Control.Feedback>
           </Form.Floating>
-          <Button variant="outline-primary" className="w-100 mb-3" type="submit">
+          <Button
+            className="w-100 mb-3"
+            variant="outline-primary"
+            type="submit"
+            disabled={isLoading}
+          >
             {t('loginPage.button')}
           </Button>
         </Form>

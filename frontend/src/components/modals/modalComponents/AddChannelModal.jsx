@@ -1,4 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
@@ -8,13 +13,16 @@ import { toast } from 'react-toastify';
 import { useAddChannelMutation, useGetChannelsQuery } from '../../../store/API/channelsAPI.js';
 import { actions as modalActions } from '../../../store/slices/modalSlice.js';
 import { actions as conditionActions } from '../../../store/slices/conditionSlice.js';
+import selectors from '../../../store/slices/selectors';
 
 const AddChannelModal = () => {
   const { data: channels } = useGetChannelsQuery('');
-  const { isShown } = useSelector((state) => state.modal);
+  const isShown = useSelector(selectors.isShownModal);
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const addChannelInput = useRef(null);
+
+  const MemoButton = memo(Button);
 
   const channelNameSchema = Yup.object().shape({
     name: Yup.string()
@@ -30,9 +38,9 @@ const AddChannelModal = () => {
 
   const [addChannel] = useAddChannelMutation();
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     dispatch(modalActions.closeModal());
-  };
+  });
 
   const handleSubmitForm = async ({ name: addChannelName }, { setErrors }) => {
     const normalizedName = addChannelName.trim();
@@ -99,18 +107,18 @@ const AddChannelModal = () => {
                 </Form.Control.Feedback>
               </Form.Group>
               <div className="d-flex justify-content-end">
-                <Button
+                <MemoButton
                   className="me-2"
                   variant="secondary"
                   onClick={handleClose}
                 >
                   {t('modal.buttons.close')}
-                </Button>
-                <Button
+                </MemoButton>
+                <MemoButton
                   type="submit"
                 >
                   {t('modal.buttons.submit')}
-                </Button>
+                </MemoButton>
               </div>
             </Form>
           )}

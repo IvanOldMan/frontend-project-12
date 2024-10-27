@@ -7,13 +7,15 @@ import { useRemoveChannelMutation } from '../../../store/API/channelsAPI.js';
 import { useGetMessagesQuery, useRemoveMessageMutation } from '../../../store/API/messagesAPI.js';
 import { actions as modalActions } from '../../../store/slices/modalSlice';
 import { actions as conditionActions } from '../../../store/slices/conditionSlice';
+import selectors from '../../../store/slices/selectors';
 
 const RemoveChannelModal = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const { isShown, channelID } = useSelector((state) => state.modal);
-  const { activeChannelId } = useSelector((state) => state.condition);
+  const isShown = useSelector(selectors.isShownModal);
+  const channelID = useSelector(selectors.channelIdModal);
+  const activeChannelId = useSelector(selectors.currentChannelID);
 
   const { data: messages } = useGetMessagesQuery('');
 

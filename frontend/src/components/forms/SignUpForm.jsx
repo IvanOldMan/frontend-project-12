@@ -1,15 +1,19 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { authenticationRequest } from '../../store/slices/authenticatedSlice.js';
+import path from '../../utils/routes.js';
+import { useSignupMutation } from '../../store/API/authorizationAPI';
+import { actions as AuthActions } from '../../store/slices/authenticatedSlice';
 
 const SignUpForm = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const usernameInput = useRef(null);
+  const navigate = useNavigate();
 
   const signupSchema = Yup.object().shape({
     username: Yup.string()
@@ -28,11 +32,15 @@ const SignUpForm = () => {
     usernameInput.current.focus();
   }, []);
 
-  const handleSubmitForm = async ({ username, password }, { setErrors }) => {
-    const { payload } = await dispatch(authenticationRequest({ url: '/signup', username, password }));
+  const [signup, { isLoading }] = useSignupMutation();
 
-    if (payload === 409) {
-      setErrors({ username: ' ', password: ' ', confirmPassword: t('schema.signupError') });
+  const handleSubmitForm = async (values, { setErrors }) => {
+    try {
+      const data = await signup(values).unwrap();
+      dispatch(AuthActions.setAuthenticated(data));
+      navigate(path.pages.root());
+    } catch (e) {
+      setErrors({ username: ' ', password: ' ', confirmPassword: t(`errors.${e.status}`) });
     }
   };
 
@@ -115,9 +123,10 @@ const SignUpForm = () => {
             </Form.Control.Feedback>
           </Form.Floating>
           <Button
+            className="w-100 mb-3"
             type="submit"
             variant="outline-primary"
-            className="w-100 mb-3"
+            disabled={isLoading}
           >
             {t('signUpPage.button')}
           </Button>

@@ -1,19 +1,19 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button, Col, Nav } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { useGetChannelsQuery } from '../../store/API/channelsAPI.js';
 import { actions as modalActions } from '../../store/slices/modalSlice.js';
 import ChannelItem from './ChannelItem.jsx';
 
-const ChannelsContainer = () => {
-  const { data: channels } = useGetChannelsQuery('');
+const ChannelsContainer = ({ channels }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const modalHandler = () => {
-    dispatch(modalActions.addChannelModal());
-  };
+  const MemoButton = memo(Button);
+
+  const handleOpenModal = useCallback(() => {
+    dispatch(modalActions.openModal({ type: 'add' }));
+  });
 
   return (
     <Col xs={4} md={2} className="d-flex border-end px-0 bg-light flex-column h-100">
@@ -21,9 +21,9 @@ const ChannelsContainer = () => {
         <b>
           {t('channelsContainer.title')}
         </b>
-        <Button
+        <MemoButton
           className="p-0 text-primary"
-          onClick={modalHandler}
+          onClick={handleOpenModal}
           variant="group-vertical"
         >
           <svg
@@ -41,7 +41,7 @@ const ChannelsContainer = () => {
             />
           </svg>
           <span className="visually-hidden">+</span>
-        </Button>
+        </MemoButton>
       </div>
       <Nav
         className="flex-column px-2 mb-3 overflow-auto h-100 d-block"
@@ -50,8 +50,7 @@ const ChannelsContainer = () => {
         variant="pills"
         fill
       >
-        {channels && channels.map((channel) => (
-          // eslint-disable-next-line
+        {channels.map((channel) => (
           <Nav.Item
             as="li"
             className="w-100"

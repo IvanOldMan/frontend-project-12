@@ -1,7 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import {
   Card,
   Col,
@@ -12,18 +10,9 @@ import {
 import PageContainer from '../components/PageContainer.jsx';
 import LoginForm from '../components/forms/LoginForm.jsx';
 import loginImage from '../assets/images/login.jpg';
-import LocalStorage from '../utils/LocalStorageAdapter.js';
 
 const LoginPage = () => {
-  const navigate = useNavigate();
-  const { isAuthenticated } = useSelector((state) => state.authentication);
   const { t } = useTranslation();
-
-  useEffect(() => {
-    if (LocalStorage.isHaveToken()) {
-      navigate('/');
-    }
-  }, [isAuthenticated]); // eslint-disable-line
 
   return (
     <PageContainer>

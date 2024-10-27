@@ -1,16 +1,17 @@
-import React, { useEffect, useRef } from 'react';
+import React, { memo, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { Formik } from 'formik';
 import { useAddMessageMutation } from '../../store/API/messagesAPI.js';
-import LocalStorage from '../../utils/LocalStorageAdapter.js';
+import selectors from '../../store/slices/selectors';
 
 const MessageForm = () => {
   const { t } = useTranslation();
   const messageInput = useRef(null);
-  const { activeChannelId } = useSelector((state) => state.condition);
+  const activeChannelId = useSelector(selectors.currentChannelID);
+  const currentUsername = useSelector(selectors.username);
 
   const messageSchema = Yup.object().shape({
     body: Yup.string()
@@ -22,6 +23,8 @@ const MessageForm = () => {
     messageInput.current.focus();
   }, []);
 
+  const MemoButton = memo(Button);
+
   const [
     addMessage,
     { isLoading: isAddingMessage },
@@ -31,7 +34,7 @@ const MessageForm = () => {
     const result = {
       body,
       channelId: activeChannelId,
-      username: LocalStorage.getUsername(),
+      username: currentUsername,
     };
     addMessage(result);
     resetForm();
@@ -66,7 +69,7 @@ const MessageForm = () => {
                 value={values.body}
                 onChange={handleChange}
               />
-              <Button
+              <MemoButton
                 type="submit"
                 variant="group-vertical"
                 disabled={!isValid || !dirty || isAddingMessage}
@@ -84,7 +87,7 @@ const MessageForm = () => {
                   />
                 </svg>
                 <span className="visually-hidden">Отправить</span>
-              </Button>
+              </MemoButton>
             </InputGroup>
           </Form>
         )}

@@ -1,24 +1,12 @@
 /* eslint-disable no-param-reassign */
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
-import LocalStorage from '../../utils/LocalStorageAdapter.js';
+import { createSlice } from '@reduxjs/toolkit';
 
-export const authenticationRequest = createAsyncThunk(
-  'authenticationRequest',
-  async ({ username, password, url }, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(`/api/v1${url}`, { username, password });
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.status);
-    }
-  },
-);
+const AUTH_TOKEN = 'AUTH_TOKEN';
+const USER_NAME = 'USER_NAME';
 
 const initialState = {
-  isAuthenticated: false,
-  error: null,
-  loadingStatus: '',
+  token: localStorage.getItem(AUTH_TOKEN),
+  username: localStorage.getItem(USER_NAME),
 };
 
 const authenticatedSlice = createSlice({
@@ -26,28 +14,17 @@ const authenticatedSlice = createSlice({
   initialState,
   reducers: {
     setAuthenticated(state, { payload }) {
-      state.isAuthenticated = payload;
+      const { token, username } = payload;
+      localStorage.setItem(AUTH_TOKEN, token);
+      localStorage.setItem(USER_NAME, username);
+      state.token = token;
+      state.username = username;
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(authenticationRequest.pending, (state) => {
-        state.loadingStatus = 'loading';
-        state.error = null;
-      })
-      .addCase(authenticationRequest.fulfilled, (state, { payload }) => {
-        const { token, username } = payload;
-        LocalStorage.setToken(token);
-        LocalStorage.setUsername(username);
-        state.isAuthenticated = true;
-        state.loadingStatus = 'successful';
-        state.error = null;
-      })
-      .addCase(authenticationRequest.rejected, (state, { payload }) => {
-        state.loadingStatus = 'failed';
-        state.isAuthenticated = false;
-        state.error = payload;
-      });
+    removeAuthenticated(state) {
+      localStorage.clear();
+      state.token = null;
+      state.username = null;
+    },
   },
 });
 
