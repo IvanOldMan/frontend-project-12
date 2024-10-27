@@ -6,6 +6,7 @@ const Spinner = () => (
     <BoostrapSpinner variant="primary" className="d-flex" animation="border">
       <span className="visually-hidden">Loading...</span>
     </BoostrapSpinner>
-  </Row>);
+  </Row>
+);
 
 export default Spinner;

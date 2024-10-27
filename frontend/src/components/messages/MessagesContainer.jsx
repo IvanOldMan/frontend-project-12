@@ -40,7 +40,8 @@ const MessagesContainer = ({ messages }) => {
             <MessageItem
               message={message}
               key={message.id}
-            />))}
+            />
+          ))}
         </div>
         <MessageForm />
       </div>

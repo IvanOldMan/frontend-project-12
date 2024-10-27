@@ -60,7 +60,8 @@ const ChannelsContainer = ({ channels }) => {
               channel={channel}
               key={channel.id}
             />
-          </Nav.Item>))}
+          </Nav.Item>
+        ))}
       </Nav>
     </Col>
   );
