@@ -7,11 +7,11 @@ import {
   Row,
   Image,
 } from 'react-bootstrap';
-import PageContainer from '../components/PageContainer.jsx';
-import LoginForm from '../components/forms/LoginForm.jsx';
-import loginImage from '../assets/images/login.jpg';
+import PageContainer from '../../components/PageContainer.jsx';
+import Form from './form.jsx';
+import loginImage from '../../assets/images/login.jpg';
 
-const LoginPage = () => {
+const Index = () => {
   const { t } = useTranslation();
 
   return (
@@ -20,7 +20,7 @@ const LoginPage = () => {
         <Col xs={12} md={6} className="d-flex align-items-center justify-content-center">
           <Image src={loginImage} roundedCircle alt="Войти" />
         </Col>
-        <LoginForm />
+        <Form />
       </Card.Body>
       <Card.Footer className="p-4">
         <Container className="text-center">
@@ -36,4 +36,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default Index;

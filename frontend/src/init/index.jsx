@@ -5,7 +5,7 @@ import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { ErrorBoundary, Provider as RollbarProvider } from '@rollbar/react';
 import store from '../store/store';
 import App from '../App.jsx';
-import resources from '../assets/locales';
+import resources from '../locales';
 import rollbarConfig from './rollbarConfig.js';
 import webSocketInit from './socketInit.js';
 

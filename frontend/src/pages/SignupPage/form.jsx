@@ -1,32 +1,20 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import * as Yup from 'yup';
 import { Formik } from 'formik';
-import { Button, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import path from '../../utils/routes.js';
 import { useSignupMutation } from '../../store/API/authorizationAPI';
-import { actions as AuthActions } from '../../store/slices/authenticatedSlice';
+import { setAuthenticated } from '../../store/slices/authenticatedSlice';
+import FormButton from '../../components/FormButton';
+import signupSchema from './schema.js';
 
-const SignUpForm = () => {
+const SignupForm = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const usernameInput = useRef(null);
   const navigate = useNavigate();
-
-  const signupSchema = Yup.object().shape({
-    username: Yup.string()
-      .min(3, t('schema.username'))
-      .max(20, t('schema.username'))
-      .required(t('schema.required')),
-    password: Yup.string()
-      .min(6, t('schema.password'))
-      .required(t('schema.required')),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password'), null], t('schema.confirmPassword'))
-      .required(t('schema.required')),
-  });
 
   useEffect(() => {
     usernameInput.current.focus();
@@ -37,7 +25,7 @@ const SignUpForm = () => {
   const handleSubmitForm = async (values, { setErrors }) => {
     try {
       const data = await signup(values).unwrap();
-      dispatch(AuthActions.setAuthenticated(data));
+      dispatch(setAuthenticated(data));
       navigate(path.pages.root());
     } catch (e) {
       setErrors({ username: ' ', password: ' ', confirmPassword: t(`errors.${e.status}`) });
@@ -70,6 +58,7 @@ const SignUpForm = () => {
               placeholder={t('signUpPage.form.username')}
               autoComplete="username"
               required
+              disabled={isLoading}
               value={values.username}
               onChange={handleChange}
               isInvalid={!!errors.username && !!touched.username}
@@ -91,6 +80,7 @@ const SignUpForm = () => {
               placeholder={t('signUpPage.form.password')}
               autoComplete="new-password"
               required
+              disabled={isLoading}
               value={values.password}
               onChange={handleChange}
               isInvalid={!!errors.password && !!touched.password}
@@ -111,6 +101,7 @@ const SignUpForm = () => {
               placeholder={t('signUpPage.form.confirmPassword')}
               autoComplete="new-password"
               required
+              disabled={isLoading}
               value={values.confirmPassword}
               onChange={handleChange}
               isInvalid={!!errors.confirmPassword && !!touched.confirmPassword}
@@ -122,18 +113,14 @@ const SignUpForm = () => {
               {errors.confirmPassword}
             </Form.Control.Feedback>
           </Form.Floating>
-          <Button
-            className="w-100 mb-3"
-            type="submit"
-            variant="outline-primary"
-            disabled={isLoading}
-          >
-            {t('signUpPage.button')}
-          </Button>
+          <FormButton
+            isLoading={isLoading}
+            text={t('signUpPage.button')}
+          />
         </Form>
       )}
     </Formik>
   );
 };
 
-export default SignUpForm;
+export default SignupForm;

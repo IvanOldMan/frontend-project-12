@@ -1,14 +1,14 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import selectors from '../store/slices/selectors.js';
+import { selectIsAuth } from '../store/slices/selectors.js';
 import path from '../utils/routes.js';
 
 const PrivateRout = ({ children }) => {
-  const isHaveToken = !!useSelector(selectors.token);
+  const isAuth = useSelector(selectIsAuth);
 
   return (
-    isHaveToken ? children : <Navigate to={path.pages.login()} replace />
+    isAuth ? children : <Navigate to={path.pages.login()} replace />
   );
 };
 

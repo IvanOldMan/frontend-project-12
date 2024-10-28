@@ -2,13 +2,13 @@ import React, { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Col } from 'react-bootstrap';
-import MessageItem from './MessageItem.jsx';
-import MessageForm from '../forms/MessageForm.jsx';
-import selectors from '../../store/slices/selectors';
+import Message from './message.jsx';
+import Form from './form.jsx';
+import { selectChannelID, selectChannelName } from '../../store/slices/selectors';
 
-const MessagesContainer = ({ messages }) => {
-  const activeChannelId = useSelector(selectors.currentChannelID);
-  const activeChannelName = useSelector(selectors.currentChannelName);
+const Index = ({ messages }) => {
+  const activeChannelId = useSelector(selectChannelID);
+  const activeChannelName = useSelector(selectChannelName);
   const { t } = useTranslation();
 
   const currentMessages = useMemo(
@@ -37,16 +37,16 @@ const MessagesContainer = ({ messages }) => {
         </div>
         <div id="messages-box" className="chat-messages overflow-auto px-5">
           {currentMessages.map((message) => (
-            <MessageItem
+            <Message
               message={message}
               key={message.id}
             />
           ))}
         </div>
-        <MessageForm />
+        <Form />
       </div>
     </Col>
   );
 };
 
-export default MessagesContainer;
+export default Index;

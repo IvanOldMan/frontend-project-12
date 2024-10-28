@@ -1,6 +1,6 @@
 import { messageApi } from '../store/API/messagesAPI.js';
 import { channelApi } from '../store/API/channelsAPI.js';
-import { actions as conditionActions } from '../store/slices/conditionSlice.js';
+import { setDefaultChannel } from '../store/slices/uiSlice.js';
 
 const webSocketInit = (socket, store) => {
   socket
@@ -30,8 +30,8 @@ const webSocketInit = (socket, store) => {
       store.dispatch(
         channelApi.util.updateQueryData('getChannels', '', (draftChannels) => {
           const state = store.getState();
-          if (id === state.condition.activeChannelId) {
-            store.dispatch(conditionActions.setDefaultChannel());
+          if (id === state.ui.activeChannelId) {
+            store.dispatch(setDefaultChannel());
           }
           return draftChannels.filter((channel) => channel.id !== id);
         }),

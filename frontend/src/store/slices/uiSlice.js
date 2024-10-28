@@ -6,8 +6,8 @@ const initialState = {
   activeChannelName: 'general',
 };
 
-const conditionSlice = createSlice({
-  name: 'condition',
+const uiSlice = createSlice({
+  name: 'ui',
   initialState,
   reducers: {
     setActiveChannel(state, { payload }) {
@@ -21,5 +21,5 @@ const conditionSlice = createSlice({
   },
 });
 
-export const { actions } = conditionSlice;
-export default conditionSlice.reducer;
+export const { setActiveChannel, setDefaultChannel } = uiSlice.actions;
+export default uiSlice.reducer;

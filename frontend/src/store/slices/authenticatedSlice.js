@@ -28,5 +28,5 @@ const authenticatedSlice = createSlice({
   },
 });
 
-export const { actions } = authenticatedSlice;
+export const { setAuthenticated, removeAuthenticated } = authenticatedSlice.actions;
 export default authenticatedSlice.reducer;

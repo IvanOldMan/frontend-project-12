@@ -2,11 +2,12 @@ import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Button, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import { Formik } from 'formik';
 import path from '../../utils/routes.js';
 import { useLoginMutation } from '../../store/API/authorizationAPI';
-import { actions as AuthActions } from '../../store/slices/authenticatedSlice';
+import { setAuthenticated } from '../../store/slices/authenticatedSlice';
+import FormButton from '../../components/FormButton';
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const LoginForm = () => {
   const handleSubmitForm = async (values, { setErrors }) => {
     try {
       const data = await login(values).unwrap();
-      dispatch(AuthActions.setAuthenticated(data));
+      dispatch(setAuthenticated(data));
       navigate(path.pages.root());
     } catch (e) {
       setErrors({ form: t(`errors.${e.status}`) });
@@ -54,6 +55,7 @@ const LoginForm = () => {
               placeholder={t('loginPage.form.username')}
               autoComplete="username"
               required
+              disabled={isLoading}
               value={values.username}
               onChange={handleChange}
               isInvalid={!isValid}
@@ -71,6 +73,7 @@ const LoginForm = () => {
               placeholder={t('loginPage.form.password')}
               autoComplete="current-password"
               required
+              disabled={isLoading}
               value={values.password}
               onChange={handleChange}
               isInvalid={!isValid}
@@ -82,14 +85,10 @@ const LoginForm = () => {
               {errors.form}
             </Form.Control.Feedback>
           </Form.Floating>
-          <Button
-            className="w-100 mb-3"
-            variant="outline-primary"
-            type="submit"
-            disabled={isLoading}
-          >
-            {t('loginPage.button')}
-          </Button>
+          <FormButton
+            isLoading={isLoading}
+            text={t('loginPage.button')}
+          />
         </Form>
       )}
     </Formik>
